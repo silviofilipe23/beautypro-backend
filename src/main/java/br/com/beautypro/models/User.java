@@ -1,5 +1,7 @@
 package br.com.beautypro.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,12 +25,17 @@ public class User {
   private String username;
 
   @NotBlank
+  @Size(max = 20)
+  private String name;
+
+  @NotBlank
   @Size(max = 50)
   @Email
   private String email;
 
   @NotBlank
   @Size(max = 120)
+  @JsonIgnore
   private String password;
 
   private boolean resetPassword;
@@ -60,6 +67,14 @@ public class User {
 
   public void setUsername(String username) {
     this.username = username;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
   }
 
   public String getEmail() {
