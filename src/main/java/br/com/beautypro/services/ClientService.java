@@ -25,6 +25,8 @@ public class ClientService {
         List<Client> clientDTO = clients.stream()
                 .map(client -> new Client(client.getId(), client.getName(), client.getEmail(), client.getPhoneNumber(), client.isActive(), client.getAddress()))
                 .collect(Collectors.toList());
+
+
         return clientDTO;
     }
 
@@ -50,6 +52,7 @@ public class ClientService {
 
         Client clientSave = clientRepository.save(client);
         Client clientSaveDTO = new Client(clientSave.getId(), clientSave.getName(), clientSave.getEmail(), clientSave.getPhoneNumber(), address);
+
         return clientSaveDTO;
     }
 }

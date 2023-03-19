@@ -1,9 +1,11 @@
 package br.com.beautypro.repository;
 
-import br.com.beautypro.models.Address;
+import br.com.beautypro.models.UnitOfMeasure;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AddressRepository extends JpaRepository<Address, Long> {
+public interface UnitOfMeasureRepository extends JpaRepository<UnitOfMeasure, Long> {
+
+
 }
