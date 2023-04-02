@@ -8,6 +8,9 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "clients", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email"),
+        @UniqueConstraint(columnNames = "cpf"),
+        @UniqueConstraint(columnNames = "rg"),
+
 })
 public class Client {
 
@@ -18,6 +21,14 @@ public class Client {
     @NotBlank
     @Size(max = 128)
     private String name;
+
+    @NotBlank
+    @Size(max = 11)
+    private String cpf;
+
+    @NotBlank
+    @Size(max = 11)
+    private String rg;
 
     @Size(max = 64)
     private String email;
@@ -40,21 +51,16 @@ public class Client {
     public Client() {
     }
 
-    public Client(Long id, String name, String email, String phoneNumber, Address address) {
+    public Client(Long id, String name, String cpf, String rg, String email, String phoneNumber, String observations, boolean active, Address address) {
         this.id = id;
         this.name = name;
+        this.cpf = cpf;
+        this.rg = rg;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.address = address;
-    }
-
-    public Client(Long id, String name, String email, String phoneNumber, boolean active,  Address address) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.address = address;
+        this.observations = observations;
         this.active = active;
+        this.address = address;
     }
 
     public Long getId() {
@@ -111,5 +117,21 @@ public class Client {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getRg() {
+        return rg;
+    }
+
+    public void setRg(String rg) {
+        this.rg = rg;
     }
 }

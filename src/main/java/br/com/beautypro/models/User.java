@@ -25,7 +25,7 @@ public class User {
   private String username;
 
   @NotBlank
-  @Size(max = 20)
+  @Size(max = 60)
   private String name;
 
   @NotBlank
@@ -38,19 +38,29 @@ public class User {
   @JsonIgnore
   private String password;
 
-  private boolean resetPassword;
+  @Size(max = 60)
+  private String passwordResetToken;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "address_id", referencedColumnName = "id")
+  private Address address;
+
   public User() {
   }
 
-  public User(String username, String email, String password) {
+  public User(Long id, String username, String name, String email, String password, String passwordResetToken, Set<Role> roles, Address address) {
+    this.id = id;
     this.username = username;
+    this.name = name;
     this.email = email;
     this.password = password;
+    this.passwordResetToken = passwordResetToken;
+    this.roles = roles;
+    this.address = address;
   }
 
   public Long getId() {
@@ -101,11 +111,33 @@ public class User {
     this.roles = roles;
   }
 
-  public boolean isResetPassword() {
-    return resetPassword;
+  public String getPasswordResetToken() {
+    return passwordResetToken;
   }
 
-  public void setResetPassword(boolean resetPassword) {
-    this.resetPassword = resetPassword;
+  public void setPasswordResetToken(String passwordResetToken) {
+    this.passwordResetToken = passwordResetToken;
+  }
+
+  public Address getAddress() {
+    return address;
+  }
+
+  public void setAddress(Address address) {
+    this.address = address;
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+            "id=" + id +
+            ", username='" + username + '\'' +
+            ", name='" + name + '\'' +
+            ", email='" + email + '\'' +
+            ", password='" + password + '\'' +
+            ", passwordResetToken='" + passwordResetToken + '\'' +
+            ", roles=" + roles +
+            ", address=" + address +
+            '}';
   }
 }

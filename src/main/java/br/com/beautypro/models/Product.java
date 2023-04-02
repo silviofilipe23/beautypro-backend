@@ -1,14 +1,14 @@
 package br.com.beautypro.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "products", uniqueConstraints = {
-//        @UniqueConstraint(columnNames = "email"),
-})
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -29,8 +29,9 @@ public class Product {
     @NotNull
     private double quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "unit_of_measure_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private UnitOfMeasure unitOfMeasure;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -38,6 +39,16 @@ public class Product {
     private Supplier supplier;
 
     public Product() {
+    }
+
+    public Product(Long id, String name, double price, boolean active, double quantity, UnitOfMeasure unitOfMeasure, Supplier supplier) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.active = active;
+        this.quantity = quantity;
+        this.unitOfMeasure = unitOfMeasure;
+        this.supplier = supplier;
     }
 
     public Product(String name, double price, boolean active, double quantity, UnitOfMeasure unitOfMeasure, Supplier supplier) {
@@ -104,4 +115,5 @@ public class Product {
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
     }
+
 }

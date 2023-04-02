@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class SupplierRequest {
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 64)
     private String name;
 
     @NotBlank
@@ -21,6 +21,7 @@ public class SupplierRequest {
     @Size(max = 11)
     private String phoneNumber;
 
+    private String observations;
 
     @Size(max = 512)
     private String street;
@@ -132,5 +133,13 @@ public class SupplierRequest {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
     }
 }

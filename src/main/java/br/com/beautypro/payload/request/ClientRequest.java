@@ -11,6 +11,14 @@ public class ClientRequest {
     private String name;
 
     @NotBlank
+    @Size(max = 11)
+    private String cpf;
+
+    @NotBlank
+    @Size(max = 11)
+    private String rg;
+
+    @NotBlank
     @Size(max = 128)
     @Email
     private String email;
@@ -129,5 +137,21 @@ public class ClientRequest {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getRg() {
+        return rg;
+    }
+
+    public void setRg(String rg) {
+        this.rg = rg;
     }
 }

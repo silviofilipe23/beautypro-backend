@@ -2,6 +2,7 @@ package br.com.beautypro.services;
 
 import br.com.beautypro.models.*;
 import br.com.beautypro.payload.request.SupplierRequest;
+import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.repository.ProdutctRepository;
 import br.com.beautypro.repository.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,36 @@ public class SupplierService {
     @Autowired
     private SupplierRepository supplierRepository;
 
-    public List<Supplier> getAllSuppliers(int page, int size) {
+    public PageableResponse getAllSuppliers(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Supplier> supplierResponse = supplierRepository.findAll(pageable);
         List<Supplier> supplierList = supplierResponse.stream()
                 .collect(Collectors.toList());
-        return supplierList;
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(supplierList);
+        response.setPages(supplierResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(supplierResponse.getTotalElements());
+
+        return response;
+    }
+
+    public PageableResponse listSuppliersFilter(int page, int size, String name) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Supplier> supplierResponse = supplierRepository.findByNameContainingIgnoreCase(name, pageable);
+        List<Supplier> supplierList = supplierResponse.stream()
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(supplierList);
+        response.setPages(supplierResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(supplierResponse.getTotalElements());
+
+        return response;
     }
 
     public Optional<Supplier> getSupplierById(Long id) {
@@ -35,8 +60,6 @@ public class SupplierService {
     public Supplier saveSupplier(Supplier supplier) {
         return supplierRepository.save(supplier);
     }
-
-
 
     public Supplier createSupplier(SupplierRequest supplierRequest) {
         Supplier supplier = new Supplier();
@@ -59,8 +82,7 @@ public class SupplierService {
 
         supplier.setAddress(address);
 
-        Supplier supplierSave = supplierRepository.save(supplier);
-        return supplierSave;
+        return supplierRepository.save(supplier);
 
     }
 

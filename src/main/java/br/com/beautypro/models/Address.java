@@ -35,6 +35,16 @@ public class Address {
     public Address() {
     }
 
+    public Address(String street, String number, String complement, String district, String city, String state, String cep) {
+        this.street = street;
+        this.number = number;
+        this.complement = complement;
+        this.district = district;
+        this.city = city;
+        this.state = state;
+        this.cep = cep;
+    }
+
     public Address(Long id, String street, String number, String complement, String district, String city, String state, String cep) {
         this.id = id;
         this.street = street;

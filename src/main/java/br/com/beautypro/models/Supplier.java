@@ -17,7 +17,7 @@ public class Supplier {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 64)
     private String name;
 
     @NotBlank
@@ -38,6 +38,9 @@ public class Supplier {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
+
+    @Lob
+    private String observations;
 
     public Supplier() {
     }

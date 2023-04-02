@@ -22,10 +22,10 @@ public class ProductRequest {
     private double quantity;
 
     @NotNull
-    private UnitOfMeasure unitOfMeasure;
+    private Long idUnitOfMeasure;
 
     @NotNull
-    private Supplier supplier;
+    private Long idSupplier;
 
     public ProductRequest() {
     }
@@ -54,19 +54,19 @@ public class ProductRequest {
         this.quantity = quantity;
     }
 
-    public UnitOfMeasure getUnitOfMeasure() {
-        return unitOfMeasure;
+    public Long getIdUnitOfMeasure() {
+        return idUnitOfMeasure;
     }
 
-    public void setUnitOfMeasure(UnitOfMeasure unitOfMeasure) {
-        this.unitOfMeasure = unitOfMeasure;
+    public void setIdUnitOfMeasure(Long idUnitOfMeasure) {
+        this.idUnitOfMeasure = idUnitOfMeasure;
     }
 
-    public Supplier getSupplier() {
-        return supplier;
+    public Long getIdSupplier() {
+        return idSupplier;
     }
 
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
+    public void setIdSupplier(Long idSupplier) {
+        this.idSupplier = idSupplier;
     }
 }

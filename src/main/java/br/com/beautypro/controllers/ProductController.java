@@ -5,6 +5,8 @@ import br.com.beautypro.models.Supplier;
 import br.com.beautypro.models.UnitOfMeasure;
 import br.com.beautypro.payload.request.ProductRequest;
 import br.com.beautypro.payload.response.MessageResponse;
+import br.com.beautypro.payload.response.PageableResponse;
+import br.com.beautypro.repository.ProdutctRepository;
 import br.com.beautypro.services.ProductService;
 import br.com.beautypro.services.SupplierService;
 import br.com.beautypro.services.UnitOfMeasureService;
@@ -18,6 +20,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/products")
 @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -27,25 +30,30 @@ public class ProductController {
     private ProductService productService;
 
     @Autowired
+    private ProdutctRepository produtctRepository;
+
+    @Autowired
     private UnitOfMeasureService unitOfMeasureService;
 
     @Autowired
     private SupplierService supplierService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> getAllProducts(@Valid @RequestParam int page, @RequestParam int size) {
-        List<Product> products = productService.getAllProducts(page, size);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+    public ResponseEntity<PageableResponse> getAllProducts(@Valid @RequestParam int page, @RequestParam int size, @RequestParam(required=false) String name) {
+
+        if (name == null) {
+            PageableResponse clients = productService.getAllProducts(page, size);
+            return new ResponseEntity<>(clients, HttpStatus.OK);
+        } else {
+            PageableResponse clients = productService.listProductsFilter(page, size, name);
+            return new ResponseEntity<>(clients, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@Valid @PathVariable("id") Long id) {
         Optional<Product> product = productService.getProductById(id);
-        if (product.isPresent()) {
-            return new ResponseEntity<>(product.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return product.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
@@ -56,8 +64,9 @@ public class ProductController {
         product.setName(productRequest.getName());
         product.setPrice(productRequest.getPrice());
         product.setQuantity(productRequest.getQuantity());
+        product.setActive(true);
 
-        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureService.getUnitOfMeasureById(productRequest.getUnitOfMeasure().getId());
+        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureService.getUnitOfMeasureById(productRequest.getIdUnitOfMeasure());
 
         if (unitOfMeasure.isPresent()) {
             product.setUnitOfMeasure(unitOfMeasure.get());
@@ -67,7 +76,7 @@ public class ProductController {
                     .body(new MessageResponse("Unidade de medida não encontrada!"));
         }
 
-        Optional<Supplier> supplier = supplierService.getSupplierById(productRequest.getSupplier().getId());
+        Optional<Supplier> supplier = supplierService.getSupplierById(productRequest.getIdSupplier());
 
         if (supplier.isPresent()) {
             product.setSupplier(supplier.get());

@@ -5,6 +5,7 @@ import br.com.beautypro.models.Supplier;
 import br.com.beautypro.payload.request.ClientRequest;
 import br.com.beautypro.payload.request.SupplierRequest;
 import br.com.beautypro.payload.response.MessageResponse;
+import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.repository.ClientRepository;
 import br.com.beautypro.repository.SupplierRepository;
 import br.com.beautypro.services.ClientService;
@@ -33,9 +34,15 @@ public class SupplierController {
 
 
     @GetMapping
-    public ResponseEntity<List<Supplier>> getAllSuppliers(@Valid @RequestParam int page, @RequestParam int size) {
-        List<Supplier> suppliers = supplierService.getAllSuppliers(page,size);
-        return new ResponseEntity<>(suppliers, HttpStatus.OK);
+    public ResponseEntity<PageableResponse> getAllSuppliers(@Valid @RequestParam int page, @RequestParam int size, @RequestParam(required=false) String name) {
+
+        if (name == null) {
+            PageableResponse suppliers = supplierService.getAllSuppliers(page,size);
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        } else {
+            PageableResponse suppliers = supplierService.listSuppliersFilter(page, size, name);
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        }
     }
 
     @PostMapping

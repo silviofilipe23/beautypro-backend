@@ -3,6 +3,7 @@ package br.com.beautypro.services;
 import br.com.beautypro.models.Address;
 import br.com.beautypro.models.Client;
 import br.com.beautypro.payload.request.ClientRequest;
+import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,20 +20,44 @@ public class ClientService {
     @Autowired
     private ClientRepository clientRepository;
 
-    public List<Client> listClients(int page, int size) {
+    public PageableResponse listClients(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Client> clients = clientRepository.findAll(pageable);
         List<Client> clientDTO = clients.stream()
-                .map(client -> new Client(client.getId(), client.getName(), client.getEmail(), client.getPhoneNumber(), client.isActive(), client.getAddress()))
+                .map(client -> new Client(client.getId(), client.getName(), client.getCpf(), client.getRg(), client.getEmail(), client.getPhoneNumber(), client.getObservations(), client.isActive(), client.getAddress()))
                 .collect(Collectors.toList());
 
+        PageableResponse response = new PageableResponse();
 
-        return clientDTO;
+        response.setData(clientDTO);
+        response.setPages(clients.getTotalPages());
+        response.setSize(size);
+        response.setTotal(clients.getTotalElements());
+        return response;
     }
+
+    public PageableResponse listClientsFilter(int page, int size, String name) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Client> clients = clientRepository.findByNameContainingIgnoreCase(name, pageable);
+        List<Client> clientDTO = clients.stream()
+                .map(client -> new Client(client.getId(), client.getName(), client.getCpf(), client.getRg(), client.getEmail(), client.getPhoneNumber(), client.getObservations(), client.isActive(), client.getAddress()))
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(clientDTO);
+        response.setPages(clients.getTotalPages());
+        response.setSize(size);
+        response.setTotal(clients.getTotalElements());
+        return response;
+    }
+
 
     public Client createClient(ClientRequest clientDTO) {
         Client client = new Client();
         client.setName(clientDTO.getName());
+        client.setCpf(clientDTO.getCpf());
+        client.setRg(clientDTO.getRg());
         client.setEmail(clientDTO.getEmail());
         client.setPhoneNumber(clientDTO.getPhoneNumber());
         client.setObservations(clientDTO.getObservations());
@@ -51,8 +76,7 @@ public class ClientService {
         client.setAddress(address);
 
         Client clientSave = clientRepository.save(client);
-        Client clientSaveDTO = new Client(clientSave.getId(), clientSave.getName(), clientSave.getEmail(), clientSave.getPhoneNumber(), address);
 
-        return clientSaveDTO;
+        return new Client(clientSave.getId(), clientSave.getName(), clientSave.getCpf(), clientDTO.getRg(), clientSave.getEmail(), clientSave.getPhoneNumber(), client.getObservations(), clientSave.isActive(), address);
     }
 }
