@@ -1,4 +1,4 @@
-package br.com.beautypro.repository;
+package br.com.beautypro.services.repository;
 
 import br.com.beautypro.models.UnitOfMeasure;
 import org.springframework.data.jpa.repository.JpaRepository;

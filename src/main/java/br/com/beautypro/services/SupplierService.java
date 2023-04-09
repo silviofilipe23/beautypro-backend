@@ -3,8 +3,7 @@ package br.com.beautypro.services;
 import br.com.beautypro.models.*;
 import br.com.beautypro.payload.request.SupplierRequest;
 import br.com.beautypro.payload.response.PageableResponse;
-import br.com.beautypro.repository.ProdutctRepository;
-import br.com.beautypro.repository.SupplierRepository;
+import br.com.beautypro.services.repository.SupplierRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -84,6 +83,10 @@ public class SupplierService {
 
         return supplierRepository.save(supplier);
 
+    }
+
+    public Supplier updateSupplier(Supplier supplierRequest) {
+        return supplierRepository.save(supplierRequest);
     }
 
     public void deleteSupplier(Long id) {

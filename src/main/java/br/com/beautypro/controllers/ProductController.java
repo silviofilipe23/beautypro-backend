@@ -6,7 +6,7 @@ import br.com.beautypro.models.UnitOfMeasure;
 import br.com.beautypro.payload.request.ProductRequest;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
-import br.com.beautypro.repository.ProdutctRepository;
+import br.com.beautypro.services.repository.ProdutctRepository;
 import br.com.beautypro.services.ProductService;
 import br.com.beautypro.services.SupplierService;
 import br.com.beautypro.services.UnitOfMeasureService;

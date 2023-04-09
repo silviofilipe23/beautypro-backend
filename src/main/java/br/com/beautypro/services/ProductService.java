@@ -1,16 +1,12 @@
 package br.com.beautypro.services;
 
-import br.com.beautypro.models.Client;
 import br.com.beautypro.models.Product;
-import br.com.beautypro.models.Servicing;
-import br.com.beautypro.models.UnitOfMeasure;
 import br.com.beautypro.payload.response.PageableResponse;
-import br.com.beautypro.repository.ProdutctRepository;
+import br.com.beautypro.services.repository.ProdutctRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

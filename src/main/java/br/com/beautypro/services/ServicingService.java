@@ -1,20 +1,22 @@
 package br.com.beautypro.services;
 
-import br.com.beautypro.models.Product;
+import br.com.beautypro.models.Client;
 import br.com.beautypro.models.Servicing;
+import br.com.beautypro.models.Supplier;
 import br.com.beautypro.models.User;
 import br.com.beautypro.payload.request.ServicingRequest;
+import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
-import br.com.beautypro.repository.ServicingRepository;
-import br.com.beautypro.repository.UserRepository;
+import br.com.beautypro.services.repository.ServicingRepository;
+import br.com.beautypro.services.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,21 +38,20 @@ public class ServicingService {
         servicing.setReturnDays(servicingRequest.getReturnDays());
         servicing.setActive(true);
 
+        Set<User> userList = new HashSet<>();
 
         for (Long userId : servicingRequest.getProfessionalList()) {
             Optional<User> user = userRepository.findById(userId);
 
-            user.ifPresent(value -> servicing.getProfessionalList().add(value));
+            user.ifPresent(value -> userList.add(value));
         }
+
+        servicing.setProfessionalList(userList);
 
 
         Servicing servicingSaved = servicingRepository.save(servicing);
 
-        List<User> userList = servicingSaved.getProfessionalList();
-
-
-
-        return servicingRepository.save(servicing);
+        return servicingSaved;
     }
 
     public PageableResponse listServicings(int page, int size) {
@@ -67,6 +68,14 @@ public class ServicingService {
         response.setTotal(servicingResponse.getTotalElements());
 
         return response;
+    }
+
+    public Optional<Servicing> getServicingById(Long id) {
+        return servicingRepository.findById(id);
+    }
+
+    public Servicing updateServicing(Servicing servicingRequest) {
+        return servicingRepository.save(servicingRequest);
     }
 
     public Servicing getServicings(Long id) {

@@ -4,7 +4,7 @@ import br.com.beautypro.models.Address;
 import br.com.beautypro.models.Client;
 import br.com.beautypro.payload.request.ClientRequest;
 import br.com.beautypro.payload.response.PageableResponse;
-import br.com.beautypro.repository.ClientRepository;
+import br.com.beautypro.services.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,5 +79,13 @@ public class ClientService {
         Client clientSave = clientRepository.save(client);
 
         return new Client(clientSave.getId(), clientSave.getName(), clientSave.getCpf(), clientDTO.getRg(), clientSave.getEmail(), clientSave.getPhoneNumber(), client.getObservations(), clientSave.isActive(), address);
+    }
+
+    public Optional<Client> getClientById(Long id) {
+        return clientRepository.findById(id);
+    }
+
+    public void deleteClient(Long id) {
+        clientRepository.deleteById(id);
     }
 }

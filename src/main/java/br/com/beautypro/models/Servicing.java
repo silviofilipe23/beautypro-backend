@@ -8,7 +8,9 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "servicing", uniqueConstraints = {
@@ -18,7 +20,7 @@ public class Servicing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @NotBlank
     @Size(max = 64)
@@ -38,9 +40,9 @@ public class Servicing {
 
     private String returnDays;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "servicing_user", joinColumns = @JoinColumn(name = "servicing_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<User> professionalList = new ArrayList<>();
+    private Set<User> professionalList = new HashSet<>();
 
     @NotNull
     @Column(columnDefinition = "boolean default true")
@@ -49,11 +51,11 @@ public class Servicing {
     public Servicing() {
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -73,11 +75,11 @@ public class Servicing {
         this.price = price;
     }
 
-    public List<User> getProfessionalList() {
+    public Set<User> getProfessionalList() {
         return professionalList;
     }
 
-    public void setProfessionalList(List<User> professionalList) {
+    public void setProfessionalList(Set<User> professionalList) {
         this.professionalList = professionalList;
     }
 
@@ -120,4 +122,6 @@ public class Servicing {
     public void setReturnDays(String returnDays) {
         this.returnDays = returnDays;
     }
+
+
 }

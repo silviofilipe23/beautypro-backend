@@ -1,11 +1,9 @@
 package br.com.beautypro.services;
 
 import br.com.beautypro.models.User;
-import br.com.beautypro.repository.UserRepository;
+import br.com.beautypro.services.repository.UserRepository;
 import br.com.beautypro.util.EmailUtil;
 import br.com.beautypro.util.TokenUtil;
-import com.twilio.converter.Promoter;
-import com.twilio.type.PhoneNumber;
 import com.twilio.rest.api.v2010.account.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

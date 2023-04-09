@@ -1,4 +1,4 @@
-package br.com.beautypro.repository;
+package br.com.beautypro.services.repository;
 
 import java.util.Optional;
 

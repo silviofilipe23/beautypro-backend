@@ -1,6 +1,5 @@
 package br.com.beautypro.security.services;
 
-import br.com.beautypro.models.Client;
 import br.com.beautypro.payload.response.PageableResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.beautypro.models.User;
-import br.com.beautypro.repository.UserRepository;
+import br.com.beautypro.services.repository.UserRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +45,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     response.setSize(size);
     response.setTotal(userRep.getTotalElements());
     return response;
+  }
+
+  public void deleteUser(Long id) {
+    userRepository.deleteById(id);
   }
 
 }

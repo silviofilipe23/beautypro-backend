@@ -1,14 +1,10 @@
 package br.com.beautypro.controllers;
 
-import br.com.beautypro.models.Client;
 import br.com.beautypro.models.Supplier;
-import br.com.beautypro.payload.request.ClientRequest;
 import br.com.beautypro.payload.request.SupplierRequest;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
-import br.com.beautypro.repository.ClientRepository;
-import br.com.beautypro.repository.SupplierRepository;
-import br.com.beautypro.services.ClientService;
+import br.com.beautypro.services.repository.SupplierRepository;
 import br.com.beautypro.services.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -45,6 +41,12 @@ public class SupplierController {
         }
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Supplier> getSupplierId(@Valid @PathVariable("id") Long id) {
+        Optional<Supplier> supplier = supplierService.getSupplierById(id);
+        return supplier.map(value -> new ResponseEntity<>(value, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @PostMapping
     public ResponseEntity<?> createSupplier(@Valid @RequestBody SupplierRequest supplierRequest) {
 
@@ -64,5 +66,30 @@ public class SupplierController {
         return new ResponseEntity<>(savedSupplier, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateSupplier(@Valid @PathVariable Long id, @RequestBody Supplier supplierRequest) {
+
+        Optional<Supplier> supplierExists = supplierRepository.findById(id);
+
+        if (supplierExists.isPresent()) {
+            Supplier savedSupplier = supplierService.updateSupplier(supplierRequest);
+            return new ResponseEntity<>(savedSupplier, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteSupplier(@Valid @PathVariable("id") Long id) {
+        Optional<Supplier> existingSupplier = supplierService.getSupplierById(id);
+        if (existingSupplier.isPresent()) {
+            supplierService.deleteSupplier(id);
+            return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse("Fornecedor inativado com sucesso!"));
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

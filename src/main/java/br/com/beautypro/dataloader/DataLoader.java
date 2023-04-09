@@ -1,16 +1,10 @@
 package br.com.beautypro.dataloader;
 
-import br.com.beautypro.models.ERole;
-import br.com.beautypro.models.Role;
-import br.com.beautypro.models.User;
-import br.com.beautypro.repository.RoleRepository;
-import br.com.beautypro.repository.UserRepository;
+import br.com.beautypro.services.repository.RoleRepository;
+import br.com.beautypro.services.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class DataLoader implements CommandLineRunner {

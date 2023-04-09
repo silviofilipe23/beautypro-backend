@@ -3,7 +3,6 @@ package br.com.beautypro.controllers;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
@@ -34,8 +33,8 @@ import br.com.beautypro.models.Role;
 import br.com.beautypro.models.User;
 import br.com.beautypro.payload.response.JwtResponse;
 import br.com.beautypro.payload.response.MessageResponse;
-import br.com.beautypro.repository.RoleRepository;
-import br.com.beautypro.repository.UserRepository;
+import br.com.beautypro.services.repository.RoleRepository;
+import br.com.beautypro.services.repository.UserRepository;
 import br.com.beautypro.security.jwt.JwtUtils;
 import br.com.beautypro.security.services.UserDetailsImpl;
 

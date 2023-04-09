@@ -1,17 +1,12 @@
 package br.com.beautypro.services;
 
-import br.com.beautypro.models.Client;
 import br.com.beautypro.models.UnitOfMeasure;
-import br.com.beautypro.repository.UnitOfMeasureRepository;
+import br.com.beautypro.services.repository.UnitOfMeasureRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UnitOfMeasureService {
