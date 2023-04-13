@@ -24,9 +24,7 @@ public class ClientService {
     public PageableResponse listClients(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Client> clients = clientRepository.findAll(pageable);
-        List<Client> clientDTO = clients.stream()
-                .map(client -> new Client(client.getId(), client.getName(), client.getCpf(), client.getRg(), client.getEmail(), client.getPhoneNumber(), client.getObservations(), client.isActive(), client.getAddress()))
-                .collect(Collectors.toList());
+        List<Client> clientDTO = clients.stream().collect(Collectors.toList());
 
         PageableResponse response = new PageableResponse();
 
@@ -41,7 +39,6 @@ public class ClientService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Client> clients = clientRepository.findByNameContainingIgnoreCase(name, pageable);
         List<Client> clientDTO = clients.stream()
-                .map(client -> new Client(client.getId(), client.getName(), client.getCpf(), client.getRg(), client.getEmail(), client.getPhoneNumber(), client.getObservations(), client.isActive(), client.getAddress()))
                 .collect(Collectors.toList());
 
         PageableResponse response = new PageableResponse();
@@ -54,31 +51,12 @@ public class ClientService {
     }
 
 
-    public Client createClient(ClientRequest clientDTO) {
-        Client client = new Client();
-        client.setName(clientDTO.getName());
-        client.setCpf(clientDTO.getCpf());
-        client.setRg(clientDTO.getRg());
-        client.setEmail(clientDTO.getEmail());
-        client.setPhoneNumber(clientDTO.getPhoneNumber());
-        client.setObservations(clientDTO.getObservations());
-        client.setActive(true);
+    public Client createClient(Client clientDTO) {
+        return clientRepository.save(clientDTO);
+    }
 
-        Address address = new Address();
-
-        address.setCep(clientDTO.getCep());
-        address.setCity(clientDTO.getCity());
-        address.setComplement(clientDTO.getComplement());
-        address.setDistrict(clientDTO.getDistrict());
-        address.setNumber(clientDTO.getNumber());
-        address.setStreet(clientDTO.getStreet());
-        address.setState(clientDTO.getState());
-
-        client.setAddress(address);
-
-        Client clientSave = clientRepository.save(client);
-
-        return new Client(clientSave.getId(), clientSave.getName(), clientSave.getCpf(), clientDTO.getRg(), clientSave.getEmail(), clientSave.getPhoneNumber(), client.getObservations(), clientSave.isActive(), address);
+    public Client updatedClient(Client clientDTO) {
+        return clientRepository.save(clientDTO);
     }
 
     public Optional<Client> getClientById(Long id) {

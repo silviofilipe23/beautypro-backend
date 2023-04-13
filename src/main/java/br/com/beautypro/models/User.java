@@ -13,10 +13,9 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "users", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "username"),
-    @UniqueConstraint(columnNames = "email")
+    @UniqueConstraint(columnNames = "username")
 })
-public class User {
+public class User extends Person {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -26,16 +25,6 @@ public class User {
   private String username;
 
   @NotBlank
-  @Size(max = 60)
-  private String name;
-
-  @NotBlank
-  @Size(max = 50)
-  @Email
-  private String email;
-
-  @NotBlank
-  @Size(max = 120)
   @JsonIgnore
   private String password;
 
@@ -46,23 +35,8 @@ public class User {
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "address_id", referencedColumnName = "id")
-  private Address address;
-
 
   public User() {
-  }
-
-  public User(Long id, String username, String name, String email, String password, String passwordResetToken, Set<Role> roles, Address address) {
-    this.id = id;
-    this.username = username;
-    this.name = name;
-    this.email = email;
-    this.password = password;
-    this.passwordResetToken = passwordResetToken;
-    this.roles = roles;
-    this.address = address;
   }
 
   public Long getId() {
@@ -81,36 +55,12 @@ public class User {
     this.username = username;
   }
 
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
   public String getPassword() {
     return password;
   }
 
   public void setPassword(String password) {
     this.password = password;
-  }
-
-  public Set<Role> getRoles() {
-    return roles;
-  }
-
-  public void setRoles(Set<Role> roles) {
-    this.roles = roles;
   }
 
   public String getPasswordResetToken() {
@@ -121,25 +71,11 @@ public class User {
     this.passwordResetToken = passwordResetToken;
   }
 
-  public Address getAddress() {
-    return address;
+  public Set<Role> getRoles() {
+    return roles;
   }
 
-  public void setAddress(Address address) {
-    this.address = address;
-  }
-
-  @Override
-  public String toString() {
-    return "User{" +
-            "id=" + id +
-            ", username='" + username + '\'' +
-            ", name='" + name + '\'' +
-            ", email='" + email + '\'' +
-            ", password='" + password + '\'' +
-            ", passwordResetToken='" + passwordResetToken + '\'' +
-            ", roles=" + roles +
-            ", address=" + address +
-            '}';
+  public void setRoles(Set<Role> roles) {
+    this.roles = roles;
   }
 }

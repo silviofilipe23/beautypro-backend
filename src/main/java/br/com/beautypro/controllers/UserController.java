@@ -53,12 +53,12 @@ public class UserController {
             Address address = new Address();
 
             address.setCep(userRequest.getCep());
-            address.setCity(userRequest.getCity());
+//            address.setCity(userRequest.getCity());
             address.setComplement(userRequest.getComplement());
             address.setDistrict(userRequest.getDistrict());
             address.setNumber(userRequest.getNumber());
             address.setStreet(userRequest.getStreet());
-            address.setState(userRequest.getState());
+//            address.setState(userRequest.getState());
 
             user.setAddress(address);
             user.setName(userRequest.getName());

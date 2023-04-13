@@ -23,37 +23,14 @@ public class Address {
     @Size(max = 32)
     private String district;
 
-    @Size(max = 32)
-    private String city;
-
-    @Size(max = 32)
-    private String state;
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private City city;
 
     @Size(max = 8)
     private String cep;
 
     public Address() {
-    }
-
-    public Address(String street, String number, String complement, String district, String city, String state, String cep) {
-        this.street = street;
-        this.number = number;
-        this.complement = complement;
-        this.district = district;
-        this.city = city;
-        this.state = state;
-        this.cep = cep;
-    }
-
-    public Address(Long id, String street, String number, String complement, String district, String city, String state, String cep) {
-        this.id = id;
-        this.street = street;
-        this.number = number;
-        this.complement = complement;
-        this.district = district;
-        this.city = city;
-        this.state = state;
-        this.cep = cep;
     }
 
     public Long getId() {
@@ -96,20 +73,12 @@ public class Address {
         this.district = district;
     }
 
-    public String getCity() {
+    public City getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(City city) {
         this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
     }
 
     public String getCep() {

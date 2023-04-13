@@ -63,23 +63,23 @@ public class SupplierService {
     public Supplier createSupplier(SupplierRequest supplierRequest) {
         Supplier supplier = new Supplier();
 
-        supplier.setActive(true);
-        supplier.setCnpj(supplierRequest.getCnpj());
-        supplier.setEmail(supplierRequest.getEmail());
-        supplier.setName(supplierRequest.getName());
-        supplier.setPhoneNumber(supplierRequest.getPhoneNumber());
-
-        Address address = new Address();
-
-        address.setCep(supplierRequest.getCep());
-        address.setCity(supplierRequest.getCity());
-        address.setComplement(supplierRequest.getComplement());
-        address.setDistrict(supplierRequest.getDistrict());
-        address.setNumber(supplierRequest.getNumber());
-        address.setStreet(supplierRequest.getStreet());
-        address.setState(supplierRequest.getState());
-
-        supplier.setAddress(address);
+//        supplier.setActive(true);
+//        supplier.setCnpj(supplierRequest.getCnpj());
+//        supplier.setEmail(supplierRequest.getEmail());
+//        supplier.setName(supplierRequest.getName());
+//        supplier.setPhoneNumber(supplierRequest.getPhoneNumber());
+//
+//        Address address = new Address();
+//
+//        address.setCep(supplierRequest.getCep());
+//        address.setCity(supplierRequest.getCity());
+//        address.setComplement(supplierRequest.getComplement());
+//        address.setDistrict(supplierRequest.getDistrict());
+//        address.setNumber(supplierRequest.getNumber());
+//        address.setStreet(supplierRequest.getStreet());
+//        address.setState(supplierRequest.getState());
+//
+//        supplier.setAddress(address);
 
         return supplierRepository.save(supplier);
 

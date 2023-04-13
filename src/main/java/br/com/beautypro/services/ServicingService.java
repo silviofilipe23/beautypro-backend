@@ -43,16 +43,20 @@ public class ServicingService {
         for (Long userId : servicingRequest.getProfessionalList()) {
             Optional<User> user = userRepository.findById(userId);
 
-            user.ifPresent(value -> userList.add(value));
+            user.ifPresent(userList::add);
         }
 
         servicing.setProfessionalList(userList);
 
-
-        Servicing servicingSaved = servicingRepository.save(servicing);
-
-        return servicingSaved;
+        return servicingRepository.save(servicing);
     }
+
+
+    public Optional<Servicing> getServicingById(Long id) {
+        return servicingRepository.findById(id);
+    }
+
+
 
     public PageableResponse listServicings(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -70,17 +74,10 @@ public class ServicingService {
         return response;
     }
 
-    public Optional<Servicing> getServicingById(Long id) {
-        return servicingRepository.findById(id);
-    }
-
     public Servicing updateServicing(Servicing servicingRequest) {
         return servicingRepository.save(servicingRequest);
     }
 
-    public Servicing getServicings(Long id) {
-        return servicingRepository.findById(id).orElse(null);
-    }
 
     public void deleteServicing(Long id) {
         servicingRepository.deleteById(id);

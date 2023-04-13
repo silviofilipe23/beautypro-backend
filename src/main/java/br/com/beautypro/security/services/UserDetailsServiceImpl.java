@@ -35,7 +35,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     Pageable pageable = PageRequest.of(page, size);
     Page<User> userRep = userRepository.findAll(pageable);
     List<User> userDTO = userRep.stream()
-            .map(user -> new User(user.getId(), user.getUsername(), user.getName(), user.getEmail(), user.getPassword(), null, user.getRoles(), user.getAddress()))
+            .map(user -> new User())
             .collect(Collectors.toList());
 
     PageableResponse response = new PageableResponse();

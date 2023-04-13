@@ -1,11 +1,11 @@
 package br.com.beautypro.controllers;
 
-import br.com.beautypro.models.Client;
-import br.com.beautypro.models.Service;
-import br.com.beautypro.models.Servicing;
-import br.com.beautypro.payload.request.ProductRequest;
+import br.com.beautypro.models.*;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
+import br.com.beautypro.services.ProductService;
+import br.com.beautypro.services.ServicingService;
+import br.com.beautypro.services.StockMovementService;
 import br.com.beautypro.services.repository.ClientRepository;
 import br.com.beautypro.services.repository.ServiceRepository;
 import br.com.beautypro.services.repository.ServicingRepository;
@@ -34,6 +34,15 @@ public class ServiceController {
 
     @Autowired
     private ServicingRepository servicingRepository;
+
+    @Autowired
+    private ServicingService servicingService;
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private StockMovementService stockMovementService;
 
     @Autowired
     private UserRepository userRepository;
@@ -79,6 +88,28 @@ public class ServiceController {
         Optional<Service> serviceExists = serviceRepository.findById(id);
 
         if (serviceExists.isPresent()) {
+
+            Optional<Servicing> servicing = servicingService.getServicingById(serviceRequest.getServicing().getId());
+
+            if (!serviceRequest.isOpen()) {
+
+                if (servicing.isPresent()) {
+                    // Atualiza o estoque dos produtos utilizados
+                    for (ConsumedProducts consumedProducts : servicing.get().getServicingProducts()) {
+                        int quantityUsed = consumedProducts.getQuantity();
+                        if (quantityUsed > 0) {
+                            stockMovementService.addMovement(
+                                    consumedProducts.getProduct().getId(),
+                                    quantityUsed,
+                                    MovementType.OUT
+                            );
+                            consumedProducts.getProduct().setQuantity(consumedProducts.getProduct().getQuantity() - quantityUsed);
+                            productService.saveProduct(consumedProducts.getProduct());
+                        }
+                    }
+                }
+            }
+
             Service serviceSaved = serviceService.updateService(serviceRequest);
             return new ResponseEntity<>(serviceSaved, HttpStatus.OK);
         } else {

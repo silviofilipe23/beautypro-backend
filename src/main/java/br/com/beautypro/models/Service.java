@@ -2,8 +2,6 @@ package br.com.beautypro.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,6 +33,9 @@ public class Service {
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private TermOfConsent termOfConsent;
+
     @ManyToOne
     @JoinColumn(name = "servicing_id", referencedColumnName = "id")
     private Servicing servicing;
@@ -42,10 +43,6 @@ public class Service {
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-    @NotNull
-    @Column(columnDefinition = "boolean default false")
-    private boolean termOfConsent;
 
     @NotNull
     @Column(columnDefinition = "boolean default true")
@@ -57,19 +54,6 @@ public class Service {
     }
 
     public Service() {
-    }
-
-    public Service(String dateHour, String dateHourReturn, String createdDate, String endDate, String observations, Client client, Servicing servicing, User user, boolean termOfConsent, boolean open) {
-        this.dateHour = dateHour;
-        this.dateHourReturn = dateHourReturn;
-        this.createdDate = createdDate;
-        this.endDate = endDate;
-        this.observations = observations;
-        this.client = client;
-        this.servicing = servicing;
-        this.user = user;
-        this.termOfConsent = termOfConsent;
-        this.open = open;
     }
 
     public Long getId() {
@@ -144,19 +128,19 @@ public class Service {
         this.user = user;
     }
 
-    public boolean isTermOfConsent() {
-        return termOfConsent;
-    }
-
-    public void setTermOfConsent(boolean termOfConsent) {
-        this.termOfConsent = termOfConsent;
-    }
-
     public boolean isOpen() {
         return open;
     }
 
     public void setOpen(boolean open) {
         this.open = open;
+    }
+
+    public TermOfConsent getTermOfConsent() {
+        return termOfConsent;
+    }
+
+    public void setTermOfConsent(TermOfConsent termOfConsent) {
+        this.termOfConsent = termOfConsent;
     }
 }

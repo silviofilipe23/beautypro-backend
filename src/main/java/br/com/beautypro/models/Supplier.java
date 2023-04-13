@@ -2,56 +2,27 @@ package br.com.beautypro.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "supplier", uniqueConstraints = {
         @UniqueConstraint(columnNames = "cnpj"),
-        @UniqueConstraint(columnNames = "email")
+        @UniqueConstraint(columnNames = "corporateName"),
 })
-public class Supplier {
+public class Supplier extends Person{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotBlank
-    @Size(max = 64)
-    private String name;
-
-    @NotBlank
     @Size(max = 14)
     private String cnpj;
 
-    @Size(max = 64)
-    private String email;
-
-
-    @Size(max = 11)
-    private String phoneNumber;
-
-    @NotNull
-    @Column(columnDefinition = "boolean default true")
-    private boolean active;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
-
-    @Lob
-    private String observations;
+    @NotBlank
+    private String corporateName;
 
     public Supplier() {
-    }
-
-    public Supplier(String name, String cnpj, String email, String phoneNumber, boolean active, Address address) {
-        this.name = name;
-        this.cnpj = cnpj;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.active = active;
-        this.address = address;
     }
 
     public Long getId() {
@@ -62,14 +33,6 @@ public class Supplier {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getCnpj() {
         return cnpj;
     }
@@ -78,35 +41,11 @@ public class Supplier {
         this.cnpj = cnpj;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCorporateName() {
+        return corporateName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setCorporateName(String corporateName) {
+        this.corporateName = corporateName;
     }
 }

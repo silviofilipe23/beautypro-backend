@@ -47,7 +47,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createClient(@Valid @RequestBody ClientRequest clientDTO) {
+    public ResponseEntity<?> createClient(@Valid @RequestBody Client clientDTO) {
 
         if (clientRepository.existsByEmail(clientDTO.getEmail())) {
             return ResponseEntity
@@ -73,31 +73,29 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateClient(@Valid @PathVariable Long id, @RequestBody ClientRequest clientDTO) {
+    public ResponseEntity<?> updateClient(@Valid @PathVariable Long id, @RequestBody Client clientDTO) {
 
         Optional<Client> clientExists = clientRepository.findById(id);
 
         if (clientExists.isPresent()) {
+
             Client client = clientExists.get();
 
+            client.setActive(clientDTO.isActive());
+            client.setAddress(clientDTO.getAddress());
             client.setName(clientDTO.getName());
-            client.setEmail(clientDTO.getEmail());
+            client.setCpf(clientDTO.getCpf());
             client.setPhoneNumber(clientDTO.getPhoneNumber());
+            client.setRg(clientDTO.getRg());
+            client.setEmail(client.getEmail());
             client.setObservations(clientDTO.getObservations());
 
-            Address address = new Address();
 
-            address.setState(clientDTO.getState());
-            address.setStreet(clientDTO.getStreet());
-            address.setNumber(clientDTO.getNumber());
-            address.setDistrict(clientDTO.getDistrict());
-            address.setComplement(clientDTO.getComplement());
-            address.setCity(clientDTO.getCity());
-            address.setCep(clientDTO.getCep());
 
-            client.setAddress(address);
-            clientRepository.save(client);
-            return new ResponseEntity<>(client, HttpStatus.OK);
+
+            Client updatedClient = clientService.updatedClient(client);
+
+            return new ResponseEntity<>(updatedClient, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

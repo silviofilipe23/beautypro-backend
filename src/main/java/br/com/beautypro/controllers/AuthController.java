@@ -98,7 +98,7 @@ public class AuthController {
           .body(new MessageResponse("Email já cadastrado!"));
     }
 
-    Address address = new Address(signUpRequest.getStreet(), signUpRequest.getNumber(), signUpRequest.getComplement(), signUpRequest.getDistrict(), signUpRequest.getCity(), signUpRequest.getState(), signUpRequest.getCep());
+//    Address address = new Address(signUpRequest.getStreet(), signUpRequest.getNumber(), signUpRequest.getComplement(), signUpRequest.getDistrict(), signUpRequest.getCity(), signUpRequest.getState(), signUpRequest.getCep());
 
     // Create new user's account
     User user = new User();
@@ -106,7 +106,7 @@ public class AuthController {
     user.setEmail(signUpRequest.getEmail());
     user.setPassword(encoder.encode(signUpRequest.getPassword()));
     user.setName(signUpRequest.getName());
-    user.setAddress(address);
+//    user.setAddress(address);
 
     Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
