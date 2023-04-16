@@ -4,6 +4,8 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "clients", uniqueConstraints = {
@@ -24,6 +26,17 @@ public class Client extends Person{
     @NotBlank
     @Size(max = 11)
     private String rg;
+
+    @NotNull
+    private LocalDate dateOfBirth;
+
+    private String nameResponsible;
+
+    private String cpfResponsible;
+
+    private String rgResponsible;
+
+    private String anamnese;
 
     public Client() {
     }
@@ -52,5 +65,45 @@ public class Client extends Person{
 
     public void setRg(String rg) {
         this.rg = rg;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getNameResponsible() {
+        return nameResponsible;
+    }
+
+    public void setNameResponsible(String nameResponsible) {
+        this.nameResponsible = nameResponsible;
+    }
+
+    public String getCpfResponsible() {
+        return cpfResponsible;
+    }
+
+    public void setCpfResponsible(String cpfResponsible) {
+        this.cpfResponsible = cpfResponsible;
+    }
+
+    public String getRgResponsible() {
+        return rgResponsible;
+    }
+
+    public void setRgResponsible(String rgResponsible) {
+        this.rgResponsible = rgResponsible;
+    }
+
+    public String getAnamnese() {
+        return anamnese;
+    }
+
+    public void setAnamnese(String anamnese) {
+        this.anamnese = anamnese;
     }
 }

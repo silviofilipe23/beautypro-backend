@@ -89,9 +89,11 @@ public class ClientController {
             client.setRg(clientDTO.getRg());
             client.setEmail(client.getEmail());
             client.setObservations(clientDTO.getObservations());
-
-
-
+            client.setAnamnese(clientDTO.getAnamnese());
+            client.setNameResponsible(clientDTO.getNameResponsible());
+            client.setCpfResponsible(clientDTO.getCpfResponsible());
+            client.setRgResponsible(clientDTO.getRgResponsible());
+            client.setDateOfBirth(clientDTO.getDateOfBirth());
 
             Client updatedClient = clientService.updatedClient(client);
 

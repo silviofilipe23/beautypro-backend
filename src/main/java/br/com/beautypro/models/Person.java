@@ -1,10 +1,7 @@
 package br.com.beautypro.models;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @MappedSuperclass
 public class Person {
@@ -16,9 +13,9 @@ public class Person {
     @NotBlank
     private String name;
 
-    @NotBlank
+
     @Email
-    @Column(unique = true)
+    @Column(unique = true, nullable = true)
     private String email;
 
     @NotBlank
