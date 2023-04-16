@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/servicing")
 @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
@@ -29,9 +30,21 @@ public class ServicingController {
     private ServicingRepository servicingRepository;
 
     @GetMapping
-    public ResponseEntity<PageableResponse> getListServicing(@Valid @RequestParam int page, @RequestParam int size) {
-        PageableResponse servicing = servicingService.listServicings(page, size);
-        return new ResponseEntity<>(servicing, HttpStatus.OK);
+    public ResponseEntity<PageableResponse> getAllServicing(@Valid @RequestParam int page, @RequestParam int size, @RequestParam(required=false) String description, @RequestParam(required=false) Boolean active) {
+
+        if (description != null && active != null) {
+            PageableResponse suppliers = servicingService.listServicingFilterDescriptionAndActive(page, size, description, active);
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        } else if (description != null) {
+            PageableResponse suppliers = servicingService.listServicingFilterDescription(page, size, description);
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        } else if (active != null) {
+            PageableResponse suppliers = servicingService.listServicingFilterActive(page, size, active);
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        } else {
+            PageableResponse servicing = servicingService.listServicings(page, size);
+            return new ResponseEntity<>(servicing, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{id}")
@@ -41,7 +54,7 @@ public class ServicingController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createServicing(@Valid @RequestBody ServicingRequest servicingRequest) {
+    public ResponseEntity<?> createServicing(@Valid @RequestBody Servicing servicingRequest) {
 
         Servicing servicingSaved = servicingService.createServicing(servicingRequest);
         return new ResponseEntity<>(servicingSaved, HttpStatus.CREATED);

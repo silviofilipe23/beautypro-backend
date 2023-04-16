@@ -31,9 +31,7 @@ public class ProductService {
     public PageableResponse getAllProducts(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productResponse = productRepository.findAll(pageable);
-        List<Product> productList = productResponse.stream()
-                .map(product -> new Product(product.getId(), product.getName(), product.getPrice(), product.isActive(),product.getQuantity(),product.getUnitOfMeasure(), product.getSupplier()))
-                .collect(Collectors.toList());
+        List<Product> productList = productResponse.stream().collect(Collectors.toList());
 
         PageableResponse response = new PageableResponse();
 
@@ -50,9 +48,7 @@ public class ProductService {
     public PageableResponse listProductsFilter(int page, int size, String name) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Product> productResponse = productRepository.findByNameContainingIgnoreCase(name, pageable);
-        List<Product> productList = productResponse.stream()
-                .map(product -> new Product(product.getId(), product.getName(), product.getPrice(), product.isActive(),product.getQuantity(),product.getUnitOfMeasure(), product.getSupplier()))
-                .collect(Collectors.toList());
+        List<Product> productList = productResponse.stream().collect(Collectors.toList());
 
         PageableResponse response = new PageableResponse();
 

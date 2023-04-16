@@ -15,6 +15,10 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     Boolean existsByCnpj(String cnpj);
 
+    Page<Supplier> findByActive(boolean active, Pageable pageable);
+
     Page<Supplier> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
+    Page<Supplier> findByNameContainingIgnoreCaseAndActive(String name, boolean active, Pageable pageable);
 
 }

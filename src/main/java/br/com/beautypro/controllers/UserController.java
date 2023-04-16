@@ -29,9 +29,21 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<PageableResponse> getUsers(@Valid @RequestParam int page, @RequestParam int size) {
-        PageableResponse users = userDetailsService.listUsers(page, size);
-        return new ResponseEntity<>(users, HttpStatus.OK);
+    public ResponseEntity<PageableResponse> getUsers(@Valid @RequestParam int page, @RequestParam int size, @RequestParam(required=false) String name, @RequestParam(required=false) Boolean active) {
+
+        if (name != null && active != null) {
+            PageableResponse users = userDetailsService.listUsersFilterNameAndActive(page, size, name, active);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } else if (name != null) {
+            PageableResponse users = userDetailsService.listUsersFilterName(page, size, name);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } else if (active != null) {
+            PageableResponse users = userDetailsService.listUsersFilterActive(page, size, active);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } else {
+            PageableResponse users = userDetailsService.listUsers(page, size);
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
     }
 
     @GetMapping("/{userId}")

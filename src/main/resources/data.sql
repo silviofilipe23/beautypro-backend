@@ -5645,3 +5645,15 @@ INSERT INTO `city` (`id`, `name`, `state_id`, `ibge`) VALUES
 (5607, 'Pinto Bandeira', 23, 4314548),
 (5608, 'Balneário Rincão', 24, 4220000),
 (5609, 'Pescaria Brava', 24, 4212650);
+
+insert into address (cep, city_id, complement, district, number, street) values ('12312313', 104, 'rua 01', 'rua 01', '1', 'rua 01');
+insert into address (cep, city_id, complement, district, number, street) values ('12312313', 104, 'rua 02', 'rua 02', '1', 'rua 02');
+insert into address (cep, city_id, complement, district, number, street) values ('12312313', 1568, 'rua 03', 'rua 03', '1', 'rua 03');
+insert into address (cep, city_id, complement, district, number, street) values ('12312313', 1568, 'rua 04', 'rua 04', '1', 'rua 04');
+
+insert into clients (active, address_id, email, name, observations, phone_number, cpf, rg) values (true, 1, 'cliente01@teste.com', 'Cliente 01', 'rua 01rua 01rua 01rua 01rua 01rua 01rua 01rua 01rua 01rua 01', '62999999999', '15182546084', '123124');
+insert into clients (active, address_id, email, name, observations, phone_number, cpf, rg) values (true, 2, 'cliente02@teste.com', 'Cliente 02', 'rua 01rua 01rua 01rua 01rua 01rua 01rua 01rua 01rua 01rua 01', '62999999999', '57222664505', '12312442')
+
+
+insert into supplier (active, address_id, email, name, observations, phone_number, cnpj, corporate_name) values (true, 4, 'fornecedor01@teste.com', 'Fornecedor 01', 'Fornecedor 01Fornecedor 01Fornecedo', '62999999999', '30905620000130', 'Fornecedor 01')
+insert into supplier (active, address_id, email, name, observations, phone_number, cnpj, corporate_name) values (true, 4, 'fornecedor02@teste.com', 'Fornecedor 02', 'Fornecedor 02Fornecedor 02Fornecedo', '62999999999', '71580655000124', 'Fornecedor 02')

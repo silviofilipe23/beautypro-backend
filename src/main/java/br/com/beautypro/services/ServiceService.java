@@ -1,7 +1,6 @@
 package br.com.beautypro.services;
 
-import br.com.beautypro.models.Servicing;
-import br.com.beautypro.models.Supplier;
+import br.com.beautypro.models.User;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ServiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,6 +36,10 @@ public class ServiceService {
         response.setTotal(productResponse.getTotalElements());
 
         return response;
+    }
+
+    public List<br.com.beautypro.models.Service> getServiceByUserAndOpenAndDateTimeAfter(User user, boolean open, LocalDateTime dateTime) {
+        return serviceRepository.findByUserAndOpenAndDateTimeAfter(user, open, dateTime);
     }
 
 

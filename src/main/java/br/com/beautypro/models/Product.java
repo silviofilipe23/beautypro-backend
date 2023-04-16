@@ -9,7 +9,9 @@ import javax.validation.constraints.Size;
 import java.util.Set;
 
 @Entity
-@Table(name = "products")
+@Table(name = "products", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "code")
+})
 public class Product {
 
     @Id
@@ -17,11 +19,22 @@ public class Product {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
     private String name;
+
+    @NotBlank
+    private String description;
+
+    @NotBlank
+    private String code;
 
     @NotNull
     private double price;
+
+    @NotBlank
+    private String brand;
+
+    @Lob
+    private String notes;
 
     @NotNull
     @Column(columnDefinition = "boolean default true")
@@ -40,25 +53,6 @@ public class Product {
     private Supplier supplier;
 
     public Product() {
-    }
-
-    public Product(Long id, String name, double price, boolean active, double quantity, UnitOfMeasure unitOfMeasure, Supplier supplier) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.active = active;
-        this.quantity = quantity;
-        this.unitOfMeasure = unitOfMeasure;
-        this.supplier = supplier;
-    }
-
-    public Product(String name, double price, boolean active, double quantity, UnitOfMeasure unitOfMeasure, Supplier supplier) {
-        this.name = name;
-        this.price = price;
-        this.active = active;
-        this.quantity = quantity;
-        this.unitOfMeasure = unitOfMeasure;
-        this.supplier = supplier;
     }
 
     public Long getId() {
@@ -117,4 +111,35 @@ public class Product {
         this.supplier = supplier;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
 }

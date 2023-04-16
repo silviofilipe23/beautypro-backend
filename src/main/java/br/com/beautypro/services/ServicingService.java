@@ -28,27 +28,8 @@ public class ServicingService {
     @Autowired
     private UserRepository userRepository;
 
-    public Servicing createServicing(ServicingRequest servicingRequest) {
-        Servicing servicing = new Servicing();
-        servicing.setDescription(servicingRequest.getDescription());
-        servicing.setPostService(servicingRequest.getPostService());
-        servicing.setPreService(servicingRequest.getPreService());
-        servicing.setAverageTime(servicingRequest.getAverageTime());
-        servicing.setPrice(servicingRequest.getPrice());
-        servicing.setReturnDays(servicingRequest.getReturnDays());
-        servicing.setActive(true);
-
-        Set<User> userList = new HashSet<>();
-
-        for (Long userId : servicingRequest.getProfessionalList()) {
-            Optional<User> user = userRepository.findById(userId);
-
-            user.ifPresent(userList::add);
-        }
-
-        servicing.setProfessionalList(userList);
-
-        return servicingRepository.save(servicing);
+    public Servicing createServicing(Servicing servicingRequest) {
+        return servicingRepository.save(servicingRequest);
     }
 
 
@@ -56,7 +37,53 @@ public class ServicingService {
         return servicingRepository.findById(id);
     }
 
+    public PageableResponse listServicingFilterActive(int page, int size, boolean active) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Servicing> servicingResponse = servicingRepository.findByActive(active, pageable);
+        List<Servicing> servicingList = servicingResponse.stream()
+                .collect(Collectors.toList());
 
+        PageableResponse response = new PageableResponse();
+
+        response.setData(servicingList);
+        response.setPages(servicingResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(servicingResponse.getTotalElements());
+
+        return response;
+    }
+
+    public PageableResponse listServicingFilterDescriptionAndActive(int page, int size, String description, boolean active) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Servicing> servicingResponse  = servicingRepository.findByDescriptionContainingIgnoreCaseAndActive(description, active, pageable);
+        List<Servicing> servicingList = servicingResponse.stream()
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(servicingList);
+        response.setPages(servicingResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(servicingResponse.getTotalElements());
+
+        return response;
+    }
+
+    public PageableResponse listServicingFilterDescription(int page, int size, String description) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Servicing> servicingResponse = servicingRepository.findByDescriptionContainingIgnoreCase(description,  pageable);
+        List<Servicing> servicingList = servicingResponse.stream()
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(servicingList);
+        response.setPages(servicingResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(servicingResponse.getTotalElements());
+
+        return response;
+    }
 
     public PageableResponse listServicings(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

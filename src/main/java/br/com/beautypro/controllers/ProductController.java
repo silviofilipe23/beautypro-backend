@@ -57,43 +57,50 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductRequest productRequest) {
+    public ResponseEntity<?> createProduct(@Valid @RequestBody Product productRequest) {
 
-        Product product = new Product();
-
-        product.setName(productRequest.getName());
-        product.setPrice(productRequest.getPrice());
-        product.setQuantity(productRequest.getQuantity());
-        product.setActive(true);
-
-        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureService.getUnitOfMeasureById(productRequest.getIdUnitOfMeasure());
+        Optional<UnitOfMeasure> unitOfMeasure = unitOfMeasureService.getUnitOfMeasureById(productRequest.getUnitOfMeasure().getId());
 
         if (unitOfMeasure.isPresent()) {
-            product.setUnitOfMeasure(unitOfMeasure.get());
+            productRequest.setUnitOfMeasure(unitOfMeasure.get());
         } else {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Unidade de medida não encontrada!"));
         }
 
-        Optional<Supplier> supplier = supplierService.getSupplierById(productRequest.getIdSupplier());
+        Optional<Supplier> supplier = supplierService.getSupplierById(productRequest.getSupplier().getId());
 
         if (supplier.isPresent()) {
-            product.setSupplier(supplier.get());
+            productRequest.setSupplier(supplier.get());
         } else {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Fornecedor não encontrado!"));
         }
 
-        Product savedProduct = productService.saveProduct(product);
+        Product savedProduct = productService.saveProduct(productRequest);
         return new ResponseEntity<>(savedProduct, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Product> updateProduct(@Valid @PathVariable("id") Long id, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@Valid @PathVariable("id") Long id, @RequestBody Product productRequest) {
         Optional<Product> existingProduct = productService.getProductById(id);
         if (existingProduct.isPresent()) {
+
+            Product product = existingProduct.get();
+
+            product.setQuantity(productRequest.getQuantity());
+            product.setSupplier(productRequest.getSupplier());
+            product.setActive(productRequest.isActive());
+            product.setUnitOfMeasure(productRequest.getUnitOfMeasure());
+            product.setName(productRequest.getName());
+            product.setPrice(productRequest.getPrice());
+            product.setDescription(productRequest.getDescription());
+            product.setCode(productRequest.getCode());
+            product.setNotes(productRequest.getNotes());
+            product.setBrand(productRequest.getBrand());
+
             Product updatedProduct = productService.saveProduct(product);
             return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
         } else {

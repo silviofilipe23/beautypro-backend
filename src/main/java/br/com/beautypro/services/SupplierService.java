@@ -36,9 +36,41 @@ public class SupplierService {
         return response;
     }
 
+    public PageableResponse listSuppliersFilterNameAndActive(int page, int size, String name, boolean active) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Supplier> supplierResponse = supplierRepository.findByNameContainingIgnoreCaseAndActive(name, active, pageable);
+        List<Supplier> supplierList = supplierResponse.stream()
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(supplierList);
+        response.setPages(supplierResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(supplierResponse.getTotalElements());
+
+        return response;
+    }
+
+    public PageableResponse listSuppliersFilterActive(int page, int size, boolean active) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Supplier> supplierResponse = supplierRepository.findByActive(active,  pageable);
+        List<Supplier> supplierList = supplierResponse.stream()
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(supplierList);
+        response.setPages(supplierResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(supplierResponse.getTotalElements());
+
+        return response;
+    }
+
     public PageableResponse listSuppliersFilter(int page, int size, String name) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Supplier> supplierResponse = supplierRepository.findByNameContainingIgnoreCase(name, pageable);
+        Page<Supplier> supplierResponse = supplierRepository.findByNameContainingIgnoreCase(name,  pageable);
         List<Supplier> supplierList = supplierResponse.stream()
                 .collect(Collectors.toList());
 
@@ -60,28 +92,9 @@ public class SupplierService {
         return supplierRepository.save(supplier);
     }
 
-    public Supplier createSupplier(SupplierRequest supplierRequest) {
-        Supplier supplier = new Supplier();
+    public Supplier createSupplier(Supplier supplierRequest) {
 
-//        supplier.setActive(true);
-//        supplier.setCnpj(supplierRequest.getCnpj());
-//        supplier.setEmail(supplierRequest.getEmail());
-//        supplier.setName(supplierRequest.getName());
-//        supplier.setPhoneNumber(supplierRequest.getPhoneNumber());
-//
-//        Address address = new Address();
-//
-//        address.setCep(supplierRequest.getCep());
-//        address.setCity(supplierRequest.getCity());
-//        address.setComplement(supplierRequest.getComplement());
-//        address.setDistrict(supplierRequest.getDistrict());
-//        address.setNumber(supplierRequest.getNumber());
-//        address.setStreet(supplierRequest.getStreet());
-//        address.setState(supplierRequest.getState());
-//
-//        supplier.setAddress(address);
-
-        return supplierRepository.save(supplier);
+        return supplierRepository.save(supplierRequest);
 
     }
 

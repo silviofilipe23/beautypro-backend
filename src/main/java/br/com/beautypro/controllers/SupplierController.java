@@ -1,5 +1,6 @@
 package br.com.beautypro.controllers;
 
+import br.com.beautypro.models.Client;
 import br.com.beautypro.models.Supplier;
 import br.com.beautypro.payload.request.SupplierRequest;
 import br.com.beautypro.payload.response.MessageResponse;
@@ -30,13 +31,19 @@ public class SupplierController {
 
 
     @GetMapping
-    public ResponseEntity<PageableResponse> getAllSuppliers(@Valid @RequestParam int page, @RequestParam int size, @RequestParam(required=false) String name) {
+    public ResponseEntity<PageableResponse> getAllSuppliers(@Valid @RequestParam int page, @RequestParam int size, @RequestParam(required=false) String name, @RequestParam(required=false) Boolean active) {
 
-        if (name == null) {
-            PageableResponse suppliers = supplierService.getAllSuppliers(page,size);
+        if (name != null && active != null) {
+            PageableResponse suppliers = supplierService.listSuppliersFilterNameAndActive(page, size, name, active);
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        } else if (name != null) {
+            PageableResponse suppliers = supplierService.listSuppliersFilter(page, size, name);
+            return new ResponseEntity<>(suppliers, HttpStatus.OK);
+        } else if (active != null) {
+            PageableResponse suppliers = supplierService.listSuppliersFilterActive(page, size, active);
             return new ResponseEntity<>(suppliers, HttpStatus.OK);
         } else {
-            PageableResponse suppliers = supplierService.listSuppliersFilter(page, size, name);
+            PageableResponse suppliers = supplierService.getAllSuppliers(page,size);
             return new ResponseEntity<>(suppliers, HttpStatus.OK);
         }
     }
@@ -48,7 +55,7 @@ public class SupplierController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createSupplier(@Valid @RequestBody SupplierRequest supplierRequest) {
+    public ResponseEntity<?> createSupplier(@Valid @RequestBody Supplier supplierRequest) {
 
         if (supplierRepository.existsByEmail(supplierRequest.getEmail())) {
             return ResponseEntity
@@ -72,7 +79,19 @@ public class SupplierController {
         Optional<Supplier> supplierExists = supplierRepository.findById(id);
 
         if (supplierExists.isPresent()) {
-            Supplier savedSupplier = supplierService.updateSupplier(supplierRequest);
+
+            Supplier supplier = supplierExists.get();
+
+            supplier.setCnpj(supplierRequest.getCnpj());
+            supplier.setCorporateName(supplierRequest.getCorporateName());
+            supplier.setName(supplierRequest.getName());
+            supplier.setActive(supplierRequest.isActive());
+            supplier.setPhoneNumber(supplierRequest.getPhoneNumber());
+            supplier.setEmail(supplierRequest.getEmail());
+            supplier.setObservations(supplierRequest.getObservations());
+            supplier.setAddress(supplierRequest.getAddress());
+
+            Supplier savedSupplier = supplierService.updateSupplier(supplier);
             return new ResponseEntity<>(savedSupplier, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -1,7 +1,10 @@
 package br.com.beautypro.models;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,17 +17,21 @@ public class Service {
 
     @Column(name = "date_hour")
     @NotNull
-    private String dateHour;
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime dateTime;
 
     @Column(name = "date_hour_return")
-    private String dateHourReturn;
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime dateHourReturn;
 
     @Column(name = "created_date")
     @NotNull
-    private String createdDate;
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime createdDate;
 
     @Column(name = "end_date")
-    private String endDate;
+    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
+    private LocalDateTime endDate;
 
     @Lob
     private String observations;
@@ -50,7 +57,7 @@ public class Service {
 
     @PrePersist
     public void prePersist() {
-        this.createdDate = String.valueOf(LocalDateTime.now());
+        this.createdDate = LocalDateTime.now();
     }
 
     public Service() {
@@ -62,38 +69,6 @@ public class Service {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getDateHour() {
-        return dateHour;
-    }
-
-    public void setDateHour(String dateHour) {
-        this.dateHour = dateHour;
-    }
-
-    public String getDateHourReturn() {
-        return dateHourReturn;
-    }
-
-    public void setDateHourReturn(String dateHourReturn) {
-        this.dateHourReturn = dateHourReturn;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
     }
 
     public String getObservations() {
@@ -142,5 +117,37 @@ public class Service {
 
     public void setTermOfConsent(TermOfConsent termOfConsent) {
         this.termOfConsent = termOfConsent;
+    }
+
+    public LocalDateTime getDateHour() {
+        return dateTime;
+    }
+
+    public void setDateHour(LocalDateTime dateHour) {
+        this.dateTime = dateHour;
+    }
+
+    public LocalDateTime getDateHourReturn() {
+        return dateHourReturn;
+    }
+
+    public void setDateHourReturn(LocalDateTime dateHourReturn) {
+        this.dateHourReturn = dateHourReturn;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 }

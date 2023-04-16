@@ -14,6 +14,7 @@ import br.com.beautypro.services.PasswordResetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -85,7 +86,7 @@ public class AuthController {
 
   @PostMapping("/create-user")
   @PreAuthorize("hasRole('ADMIN')")
-  public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
+  public ResponseEntity<?> registerUser(@RequestBody User signUpRequest) {
     if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
           .badRequest()
@@ -98,17 +99,18 @@ public class AuthController {
           .body(new MessageResponse("Email já cadastrado!"));
     }
 
-//    Address address = new Address(signUpRequest.getStreet(), signUpRequest.getNumber(), signUpRequest.getComplement(), signUpRequest.getDistrict(), signUpRequest.getCity(), signUpRequest.getState(), signUpRequest.getCep());
-
-    // Create new user's account
     User user = new User();
+
     user.setUsername(signUpRequest.getUsername());
-    user.setEmail(signUpRequest.getEmail());
     user.setPassword(encoder.encode(signUpRequest.getPassword()));
     user.setName(signUpRequest.getName());
-//    user.setAddress(address);
+    user.setEmail(signUpRequest.getEmail());
+    user.setPhoneNumber(signUpRequest.getPhoneNumber());
+    user.setObservations(signUpRequest.getObservations());
+    user.setActive(signUpRequest.isActive());
+    user.setAddress(signUpRequest.getAddress());
 
-    Set<String> strRoles = signUpRequest.getRole();
+    Set<Role> strRoles = signUpRequest.getRoles();
     Set<Role> roles = new HashSet<>();
 
     if (strRoles == null) {
@@ -117,7 +119,7 @@ public class AuthController {
       roles.add(userRole);
     } else {
       strRoles.forEach(role -> {
-        if ("admin".equals(role)) {
+        if ("admin".equals(role.getName())) {
           Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                   .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
           roles.add(adminRole);
@@ -131,8 +133,7 @@ public class AuthController {
 
     user.setRoles(roles);
     userRepository.save(user);
-
-    return ResponseEntity.ok(new MessageResponse("Usuário cadastrado com sucesso!"));
+    return new ResponseEntity<>(HttpStatus.CREATED);
   }
 
   @PostMapping("/reset-password")

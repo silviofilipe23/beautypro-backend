@@ -25,7 +25,6 @@ public class User extends Person {
   private String username;
 
   @NotBlank
-  @JsonIgnore
   private String password;
 
   @Size(max = 60)
@@ -34,7 +33,6 @@ public class User extends Person {
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
   private Set<Role> roles = new HashSet<>();
-
 
   public User() {
   }
