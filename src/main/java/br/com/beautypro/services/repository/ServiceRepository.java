@@ -1,8 +1,13 @@
 package br.com.beautypro.services.repository;
 
+import br.com.beautypro.models.Client;
 import br.com.beautypro.models.Service;
 import br.com.beautypro.models.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -13,6 +18,12 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
 
     List<Service> findByUserAndOpenAndDateTimeAfter(User user, boolean open, LocalDateTime dateTime);
 
+
+    Page<Service> findByDateTimeBetweenOrderByDateTimeAsc(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate,
+            Pageable pageable
+    );
 
 //    List<Service> findByDateHourBetween(LocalDateTime start, LocalDateTime end);
 }

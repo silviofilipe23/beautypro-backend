@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,6 +24,25 @@ public class ServiceService {
     public PageableResponse getAllServices(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<br.com.beautypro.models.Service> productResponse = serviceRepository.findAll(pageable);
+
+
+        List<br.com.beautypro.models.Service> serviceList = productResponse.stream()
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(serviceList);
+        response.setPages(productResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(productResponse.getTotalElements());
+
+        return response;
+    }
+
+    public PageableResponse getAllServicesFilter(int page, int size, LocalDateTime startDate, LocalDateTime endDate) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<br.com.beautypro.models.Service> productResponse = serviceRepository.findByDateTimeBetweenOrderByDateTimeAsc(startDate, endDate, pageable);
 
 
         List<br.com.beautypro.models.Service> serviceList = productResponse.stream()

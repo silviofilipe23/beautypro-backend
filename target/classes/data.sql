@@ -5657,3 +5657,7 @@ insert into clients (active, address_id, email, name, observations, phone_number
 
 insert into supplier (active, address_id, email, name, observations, phone_number, cnpj, corporate_name) values (true, 4, 'fornecedor01@teste.com', 'Fornecedor 01', 'Fornecedor 01Fornecedor 01Fornecedo', '62999999999', '30905620000130', 'Fornecedor 01')
 insert into supplier (active, address_id, email, name, observations, phone_number, cnpj, corporate_name) values (true, 4, 'fornecedor02@teste.com', 'Fornecedor 02', 'Fornecedor 02Fornecedor 02Fornecedo', '62999999999', '71580655000124', 'Fornecedor 02')
+
+
+
+INSERT INTO `services` (`id`, `created_date`, `date_hour_return`, `date_hour`, `end_date`, `observations`, `open`, `client_id`, `servicing_id`, `term_of_consent_id`, `user_id`) VALUES (NULL, '2023-04-23 23:55:54.000000', NULL, '2023-04-24 08:00:00', '2023-04-24 10:00:00', 'teste', '1', '1', '1', NULL, '1');

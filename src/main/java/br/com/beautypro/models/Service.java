@@ -17,20 +17,16 @@ public class Service {
 
     @Column(name = "date_hour")
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dateTime;
 
     @Column(name = "date_hour_return")
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime dateHourReturn;
 
     @Column(name = "created_date")
     @NotNull
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime createdDate;
 
     @Column(name = "end_date")
-    @DateTimeFormat(pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime endDate;
 
     @Lob

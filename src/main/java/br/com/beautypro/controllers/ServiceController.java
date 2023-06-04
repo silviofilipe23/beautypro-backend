@@ -12,12 +12,14 @@ import br.com.beautypro.services.repository.ServicingRepository;
 import br.com.beautypro.services.repository.UserRepository;
 import br.com.beautypro.services.ServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -51,9 +53,22 @@ public class ServiceController {
     private ServiceService serviceService;
 
     @GetMapping
-    public ResponseEntity<PageableResponse> getAllServices( @RequestParam int page, @RequestParam int size) {
-        PageableResponse response = serviceService.getAllServices(page, size);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<PageableResponse> getAllServices(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate
+    ) {
+
+        if (startDate != null) {
+            PageableResponse response = serviceService.getAllServicesFilter(page, size, startDate, endDate);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } else {
+            PageableResponse response = serviceService.getAllServices(page, size);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+
     }
 
     @PostMapping

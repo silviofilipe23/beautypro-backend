@@ -87,7 +87,7 @@ public class ClientController {
             client.setCpf(clientDTO.getCpf());
             client.setPhoneNumber(clientDTO.getPhoneNumber());
             client.setRg(clientDTO.getRg());
-            client.setEmail(client.getEmail());
+            client.setEmail(clientDTO.getEmail());
             client.setObservations(clientDTO.getObservations());
             client.setAnamnese(clientDTO.getAnamnese());
             client.setNameResponsible(clientDTO.getNameResponsible());
