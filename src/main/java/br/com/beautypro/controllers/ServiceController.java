@@ -71,16 +71,14 @@ public class ServiceController {
 
     }
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @GetMapping("/available-time")
     public ResponseEntity<?> getAvailableAppointmentTime(
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate
     ) {
-
         int[] response = serviceService.getAppointmentsAvailable(startDate, endDate);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
-
     }
 
     @PostMapping
