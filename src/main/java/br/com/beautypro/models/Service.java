@@ -1,10 +1,11 @@
 package br.com.beautypro.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,6 +19,10 @@ public class Service {
     @Column(name = "date_hour")
     @NotNull
     private LocalDateTime dateTime;
+
+    @Column(name = "appointment_time")
+    @NotNull
+    private int appointmentTime;
 
     @Column(name = "date_hour_return")
     private LocalDateTime dateHourReturn;
@@ -145,5 +150,13 @@ public class Service {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public int getAppointmentTime() {
+        return appointmentTime;
+    }
+
+    public void setAppointmentTime(int appointmentTime) {
+        this.appointmentTime = appointmentTime;
     }
 }

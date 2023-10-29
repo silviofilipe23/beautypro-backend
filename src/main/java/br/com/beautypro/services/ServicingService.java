@@ -1,11 +1,6 @@
 package br.com.beautypro.services;
 
-import br.com.beautypro.models.Client;
 import br.com.beautypro.models.Servicing;
-import br.com.beautypro.models.Supplier;
-import br.com.beautypro.models.User;
-import br.com.beautypro.payload.request.ServicingRequest;
-import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ServicingRepository;
 import br.com.beautypro.services.repository.UserRepository;
@@ -13,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -85,7 +79,7 @@ public class ServicingService {
         return response;
     }
 
-    public PageableResponse listServicings(int page, int size) {
+    public PageableResponse listServicing(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Servicing> servicingResponse = servicingRepository.findAll(pageable);
         List<Servicing> servicingList = servicingResponse.stream()

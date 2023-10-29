@@ -1,15 +1,19 @@
 package br.com.beautypro.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "servicing")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Servicing {
 
     @Id
@@ -37,9 +41,6 @@ public class Servicing {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "servicing_user", joinColumns = @JoinColumn(name = "servicing_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> professionalList = new HashSet<>();
-
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<ConsumedProducts> consumedProducts;
 
     @NotNull
     @Column(columnDefinition = "boolean default true")
@@ -120,11 +121,4 @@ public class Servicing {
         this.returnDays = returnDays;
     }
 
-    public List<ConsumedProducts> getServicingProducts() {
-        return consumedProducts;
-    }
-
-    public void setServicingProducts(List<ConsumedProducts> consumedProducts) {
-        this.consumedProducts = consumedProducts;
-    }
 }

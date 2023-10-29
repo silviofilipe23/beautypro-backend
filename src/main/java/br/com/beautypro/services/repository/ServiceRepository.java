@@ -25,5 +25,8 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
             Pageable pageable
     );
 
-//    List<Service> findByDateHourBetween(LocalDateTime start, LocalDateTime end);
+    List<Service> findByDateTimeBetweenOrderByDateTimeAsc(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 }

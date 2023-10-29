@@ -71,6 +71,18 @@ public class ServiceController {
 
     }
 
+    @GetMapping("/available-time")
+    public ResponseEntity<?> getAvailableAppointmentTime(
+            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate
+    ) {
+
+        int[] response = serviceService.getAppointmentsAvailable(startDate, endDate);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+
+    }
+
     @PostMapping
     public ResponseEntity<?> createService(@Valid @RequestBody Service serviceRequest) {
 
@@ -103,28 +115,6 @@ public class ServiceController {
         Optional<Service> serviceExists = serviceRepository.findById(id);
 
         if (serviceExists.isPresent()) {
-
-            Optional<Servicing> servicing = servicingService.getServicingById(serviceRequest.getServicing().getId());
-
-            if (!serviceRequest.isOpen()) {
-
-                if (servicing.isPresent()) {
-                    // Atualiza o estoque dos produtos utilizados
-                    for (ConsumedProducts consumedProducts : servicing.get().getServicingProducts()) {
-                        int quantityUsed = consumedProducts.getQuantity();
-                        if (quantityUsed > 0) {
-                            stockMovementService.addMovement(
-                                    consumedProducts.getProduct().getId(),
-                                    quantityUsed,
-                                    MovementType.OUT
-                            );
-                            consumedProducts.getProduct().setQuantity(consumedProducts.getProduct().getQuantity() - quantityUsed);
-                            productService.saveProduct(consumedProducts.getProduct());
-                        }
-                    }
-                }
-            }
-
             Service serviceSaved = serviceService.updateService(serviceRequest);
             return new ResponseEntity<>(serviceSaved, HttpStatus.OK);
         } else {

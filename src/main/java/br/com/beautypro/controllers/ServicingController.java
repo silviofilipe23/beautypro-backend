@@ -1,9 +1,6 @@
 package br.com.beautypro.controllers;
 
 import br.com.beautypro.models.Servicing;
-import br.com.beautypro.models.Supplier;
-import br.com.beautypro.payload.request.ServicingRequest;
-import br.com.beautypro.payload.request.SupplierRequest;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.ServicingService;
@@ -42,7 +39,7 @@ public class ServicingController {
             PageableResponse suppliers = servicingService.listServicingFilterActive(page, size, active);
             return new ResponseEntity<>(suppliers, HttpStatus.OK);
         } else {
-            PageableResponse servicing = servicingService.listServicings(page, size);
+            PageableResponse servicing = servicingService.listServicing(page, size);
             return new ResponseEntity<>(servicing, HttpStatus.OK);
         }
     }
