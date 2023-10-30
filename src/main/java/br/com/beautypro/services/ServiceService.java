@@ -1,6 +1,5 @@
 package br.com.beautypro.services;
 
-import br.com.beautypro.models.AppointmentInfo;
 import br.com.beautypro.models.User;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ServiceRepository;
@@ -11,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -39,10 +37,10 @@ public class ServiceService {
         return response;
     }
 
-    public PageableResponse getAllServicesFilter(int page, int size, LocalDateTime startDate, LocalDateTime endDate) {
+    public PageableResponse getAllServicesFilter(int page, int size, LocalDateTime startDate, LocalDateTime endDate, boolean open) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<br.com.beautypro.models.Service> productResponse = serviceRepository.findByDateTimeBetweenOrderByDateTimeAsc(startDate, endDate, pageable);
+        Page<br.com.beautypro.models.Service> productResponse = serviceRepository.findByDateTimeBetweenAndOpenOrderByDateTimeAsc(startDate, endDate, open, pageable);
 
 
         List<br.com.beautypro.models.Service> serviceList = productResponse.stream()
@@ -103,6 +101,15 @@ public class ServiceService {
             }
         }
         return false;
+    }
+
+    public br.com.beautypro.models.Service saveBase64Signature(Long id, String base64Signature) {
+
+        Optional<br.com.beautypro.models.Service> service = serviceRepository.findById(id);
+
+        service.get().setBase64Signature(base64Signature);
+
+        return serviceRepository.save(service.get());
     }
 
     public List<br.com.beautypro.models.Service> getServiceByUserAndOpenAndDateTimeAfter(User user, boolean open, LocalDateTime dateTime) {

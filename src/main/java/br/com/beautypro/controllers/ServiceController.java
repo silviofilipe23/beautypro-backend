@@ -57,11 +57,12 @@ public class ServiceController {
             @RequestParam int page,
             @RequestParam int size,
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate
+            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate,
+            @RequestParam("open") boolean open
     ) {
 
         if (startDate != null) {
-            PageableResponse response = serviceService.getAllServicesFilter(page, size, startDate, endDate);
+            PageableResponse response = serviceService.getAllServicesFilter(page, size, startDate, endDate, open);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             PageableResponse response = serviceService.getAllServices(page, size);
@@ -71,14 +72,29 @@ public class ServiceController {
 
     }
 
-    @CrossOrigin(origins = "*", maxAge = 3600)
     @GetMapping("/available-time")
     public ResponseEntity<?> getAvailableAppointmentTime(
             @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
             @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate
+
     ) {
         int[] response = serviceService.getAppointmentsAvailable(startDate, endDate);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/signature")
+    public ResponseEntity<?> saveBase64Signature(
+            @RequestParam Long id,
+            @RequestBody String base64Signature
+    ) {
+        if (!servicingRepository.existsById(id)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Serviço não encontrado!"));
+        } else {
+            Service savedService = serviceService.saveBase64Signature(id, base64Signature);
+            return new ResponseEntity<>(savedService, HttpStatus.CREATED);
+        }
     }
 
     @PostMapping

@@ -19,9 +19,10 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
     List<Service> findByUserAndOpenAndDateTimeAfter(User user, boolean open, LocalDateTime dateTime);
 
 
-    Page<Service> findByDateTimeBetweenOrderByDateTimeAsc(
+    Page<Service> findByDateTimeBetweenAndOpenOrderByDateTimeAsc(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate,
+            @Param("open") boolean open,
             Pageable pageable
     );
 

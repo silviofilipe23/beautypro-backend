@@ -56,6 +56,16 @@ public class Service {
     @Column(columnDefinition = "boolean default true")
     private boolean open;
 
+    @NotNull
+    @Column(columnDefinition = "boolean default false")
+    private boolean serviceProvided;
+
+
+    private EPaymentType paymentType;
+
+    @Lob
+    private String base64Signature;
+
     @PrePersist
     public void prePersist() {
         this.createdDate = LocalDateTime.now();
@@ -158,5 +168,37 @@ public class Service {
 
     public void setAppointmentTime(int appointmentTime) {
         this.appointmentTime = appointmentTime;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    public boolean isServiceProvided() {
+        return serviceProvided;
+    }
+
+    public void setServiceProvided(boolean serviceProvided) {
+        this.serviceProvided = serviceProvided;
+    }
+
+    public EPaymentType getPaymentType() {
+        return paymentType;
+    }
+
+    public void setPaymentType(EPaymentType paymentType) {
+        this.paymentType = paymentType;
+    }
+
+    public String getBase64Signature() {
+        return base64Signature;
+    }
+
+    public void setBase64Signature(String base64Signature) {
+        this.base64Signature = base64Signature;
     }
 }
