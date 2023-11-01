@@ -87,14 +87,17 @@ public class ServiceController {
             @RequestParam Long id,
             @RequestBody String base64Signature
     ) {
-        if (!servicingRepository.existsById(id)) {
+
+        Optional<Service> existingServicing = serviceService.getServiceById(id);
+
+        if (existingServicing.isPresent()) {
+            Service savedService = serviceService.saveBase64Signature(id, base64Signature);
+            return new ResponseEntity<>(savedService, HttpStatus.CREATED);
+        } else {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Serviço não encontrado!"));
         }
-
-        Service savedService = serviceService.saveBase64Signature(id, base64Signature);
-        return new ResponseEntity<>(savedService, HttpStatus.CREATED);
     }
 
     @PostMapping
