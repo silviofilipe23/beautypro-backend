@@ -1,5 +1,6 @@
 package br.com.beautypro.services;
 
+import br.com.beautypro.models.Client;
 import br.com.beautypro.models.User;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ServiceRepository;
@@ -101,6 +102,21 @@ public class ServiceService {
             }
         }
         return false;
+    }
+
+    public PageableResponse listServicesByClients(int page, int size, Client client) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<br.com.beautypro.models.Service> services = serviceRepository.findByClient(client, pageable);
+        List<br.com.beautypro.models.Service> serviceList = services.stream()
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(serviceList);
+        response.setPages(services.getTotalPages());
+        response.setSize(size);
+        response.setTotal(services.getTotalElements());
+        return response;
     }
 
     public br.com.beautypro.models.Service saveBase64Signature(Long id, String base64Signature) {

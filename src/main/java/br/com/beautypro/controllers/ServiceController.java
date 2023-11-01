@@ -100,6 +100,19 @@ public class ServiceController {
         }
     }
 
+    @GetMapping("/by-client")
+    public ResponseEntity<PageableResponse>  listServicesByClientId(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam Long id
+    ) {
+        Client client = new Client();
+        client.setId(id);
+
+        PageableResponse response = serviceService.listServicesByClients(page, size, client);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<?> createService(@Valid @RequestBody Service serviceRequest) {
 
