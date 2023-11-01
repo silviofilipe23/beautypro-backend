@@ -60,11 +60,15 @@ public class Service {
     @Column(columnDefinition = "boolean default false")
     private boolean serviceProvided;
 
+    private double price;
 
     private EPaymentType paymentType;
 
     @Lob
     private String base64Signature;
+
+    @Column(name = "finished_date")
+    private LocalDateTime finishedDate;
 
     @PrePersist
     public void prePersist() {
@@ -200,5 +204,21 @@ public class Service {
 
     public void setBase64Signature(String base64Signature) {
         this.base64Signature = base64Signature;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public LocalDateTime getFinishedDate() {
+        return finishedDate;
+    }
+
+    public void setFinishedDate(LocalDateTime finishedDate) {
+        this.finishedDate = finishedDate;
     }
 }
