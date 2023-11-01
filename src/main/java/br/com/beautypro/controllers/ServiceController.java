@@ -91,10 +91,10 @@ public class ServiceController {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Serviço não encontrado!"));
-        } else {
-            Service savedService = serviceService.saveBase64Signature(id, base64Signature);
-            return new ResponseEntity<>(savedService, HttpStatus.CREATED);
         }
+
+        Service savedService = serviceService.saveBase64Signature(id, base64Signature);
+        return new ResponseEntity<>(savedService, HttpStatus.CREATED);
     }
 
     @PostMapping
