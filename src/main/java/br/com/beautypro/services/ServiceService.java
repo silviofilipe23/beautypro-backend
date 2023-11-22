@@ -57,6 +57,25 @@ public class ServiceService {
         return response;
     }
 
+    public PageableResponse getAllServicesFilterDesc(int page, int size, LocalDateTime startDate, LocalDateTime endDate) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<br.com.beautypro.models.Service> productResponse = serviceRepository.findAllOrderByCreatedDateDesc(pageable);
+
+
+        List<br.com.beautypro.models.Service> serviceList = productResponse.stream()
+                .collect(Collectors.toList());
+
+        PageableResponse response = new PageableResponse();
+
+        response.setData(serviceList);
+        response.setPages(productResponse.getTotalPages());
+        response.setSize(size);
+        response.setTotal(productResponse.getTotalElements());
+
+        return response;
+    }
+
     public int[] getAppointmentsAvailable(LocalDateTime startDate, LocalDateTime endDate) {
 
         List<br.com.beautypro.models.Service> appointments = serviceRepository.findByDateTimeBetweenOrderByDateTimeAsc(startDate, endDate);

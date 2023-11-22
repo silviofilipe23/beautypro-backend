@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 
-import br.com.beautypro.models.Address;
 import br.com.beautypro.payload.request.*;
 import br.com.beautypro.services.PasswordResetService;
 import org.slf4j.Logger;

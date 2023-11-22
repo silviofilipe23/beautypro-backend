@@ -56,20 +56,32 @@ public class ServiceController {
     public ResponseEntity<PageableResponse> getAllServices(
             @RequestParam int page,
             @RequestParam int size,
-            @RequestParam("start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
-            @RequestParam("end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate,
-            @RequestParam("open") boolean open
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate,
+            @RequestParam(value = "open", required = false) boolean open
     ) {
 
+        PageableResponse response;
         if (startDate != null) {
-            PageableResponse response = serviceService.getAllServicesFilter(page, size, startDate, endDate, open);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            response = serviceService.getAllServicesFilter(page, size, startDate, endDate, open);
         } else {
-            PageableResponse response = serviceService.getAllServices(page, size);
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            response = serviceService.getAllServices(page, size);
         }
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
+    @GetMapping("/filter")
+    public ResponseEntity<PageableResponse> getAllServicesList(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
+            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate,
+            @RequestParam(value = "open", required = false) boolean open
+    ) {
 
+        PageableResponse response;
+        response = serviceService.getAllServicesFilterDesc(page, size, startDate, endDate);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/available-time")

@@ -1,8 +1,6 @@
 package br.com.beautypro.controllers;
 
-import br.com.beautypro.models.Address;
 import br.com.beautypro.models.Client;
-import br.com.beautypro.payload.request.ClientRequest;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ClientRepository;

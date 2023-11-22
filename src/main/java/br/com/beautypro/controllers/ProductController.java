@@ -3,7 +3,6 @@ package br.com.beautypro.controllers;
 import br.com.beautypro.models.Product;
 import br.com.beautypro.models.Supplier;
 import br.com.beautypro.models.UnitOfMeasure;
-import br.com.beautypro.payload.request.ProductRequest;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ProdutctRepository;

@@ -1,5 +1,7 @@
 package br.com.beautypro.payload.request;
 
+import br.com.beautypro.models.City;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -32,13 +34,15 @@ public class UserRequest {
     private String district;
 
     @Size(max = 32)
-    private String city;
+    private City city;
 
     @Size(max = 32)
     private String state;
 
     @Size(max = 8)
     private String cep;
+
+    private boolean active;
 
     public UserRequest() {
     }
@@ -99,13 +103,6 @@ public class UserRequest {
         this.district = district;
     }
 
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
 
     public String getState() {
         return state;
@@ -121,5 +118,21 @@ public class UserRequest {
 
     public void setCep(String cep) {
         this.cep = cep;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 }

@@ -29,4 +29,7 @@ public class UnitOfMeasureService {
     public void deleteUnitOfMeasure(Long id) {
         unitOfMeasureRepository.deleteById(id);
     }
+
+    public static class UserService {
+    }
 }

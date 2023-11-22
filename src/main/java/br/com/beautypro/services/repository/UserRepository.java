@@ -2,6 +2,7 @@ package br.com.beautypro.services.repository;
 
 import java.util.Optional;
 
+import br.com.beautypro.models.Client;
 import br.com.beautypro.models.Supplier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

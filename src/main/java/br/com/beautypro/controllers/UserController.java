@@ -5,6 +5,7 @@ import br.com.beautypro.models.User;
 import br.com.beautypro.payload.request.UserRequest;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
+import br.com.beautypro.services.UserService;
 import br.com.beautypro.services.repository.UserRepository;
 import br.com.beautypro.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -65,12 +69,10 @@ public class UserController {
             Address address = new Address();
 
             address.setCep(userRequest.getCep());
-//            address.setCity(userRequest.getCity());
             address.setComplement(userRequest.getComplement());
             address.setDistrict(userRequest.getDistrict());
             address.setNumber(userRequest.getNumber());
             address.setStreet(userRequest.getStreet());
-//            address.setState(userRequest.getState());
 
             user.setAddress(address);
             user.setName(userRequest.getName());

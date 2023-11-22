@@ -1,8 +1,6 @@
 package br.com.beautypro.services;
 
-import br.com.beautypro.models.Address;
 import br.com.beautypro.models.Client;
-import br.com.beautypro.payload.request.ClientRequest;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ClientRepository;
 import br.com.beautypro.services.repository.ServiceRepository;
@@ -21,9 +19,6 @@ public class ClientService {
 
     @Autowired
     private ClientRepository clientRepository;
-
-    @Autowired
-    private ServiceRepository serviceRepository;
 
     public PageableResponse listClients(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -53,8 +48,6 @@ public class ClientService {
         response.setTotal(clients.getTotalElements());
         return response;
     }
-
-
 
     public Client createClient(Client clientDTO) {
         return clientRepository.save(clientDTO);
