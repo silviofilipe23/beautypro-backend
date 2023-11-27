@@ -8,6 +8,8 @@ import br.com.beautypro.payload.request.*;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ServiceRepository;
 import br.com.beautypro.services.repository.ServicingRepository;
+import br.com.beautypro.util.EmailUtil;
+import com.twilio.rest.api.v2010.account.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,8 +18,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.YearMonth;
+import javax.mail.MessagingException;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -29,6 +32,9 @@ public class ServiceService {
 
     @Autowired
     private ServicingRepository servicingRepository;
+
+    @Autowired
+    private EmailUtil emailUtil;
 
     public PageableResponse getAllServices(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -294,7 +300,23 @@ public class ServiceService {
     }
 
 
-    public br.com.beautypro.models.Service createService(br.com.beautypro.models.Service serviceRequest) {
+    public br.com.beautypro.models.Service createService(br.com.beautypro.models.Service serviceRequest) throws MessagingException {
+
+        String subject = "Agendamento Larissa Dionizio PMU";
+        String body = "Olá "+ serviceRequest.getClient().getName()  + "."
+                + " Seu procedimento " + serviceRequest.getServicing().getDescription()
+                + " foi agendado para o dia " + this.getDate(serviceRequest.getDateHour())
+                + " às " + this.getHour(serviceRequest.getDateHour().minusHours(3))  + "."
+                + " Esperamos por você!";
+
+        emailUtil.sendEmail(serviceRequest.getClient().getEmail(), subject, body);
+
+        Message message = Message.creator(
+                        new com.twilio.type.PhoneNumber("whatsapp:+55" + serviceRequest.getClient().getPhoneNumber().substring(0, 2) + serviceRequest.getClient().getPhoneNumber().substring(3)),
+                        new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
+                        body)
+                .create();
+
         return serviceRepository.save(serviceRequest);
     }
 
@@ -302,8 +324,52 @@ public class ServiceService {
         return serviceRepository.findById(id);
     }
 
-    public br.com.beautypro.models.Service updateService(br.com.beautypro.models.Service serviceRequest) {
+    public br.com.beautypro.models.Service updateService(br.com.beautypro.models.Service serviceRequest) throws MessagingException {
+
+
+
+
+
+        String subject = "Agendamento Larissa Dionizio PMU";
+        String body = "Olá "+ serviceRequest.getClient().getName()  + "."
+                + " Seu procedimento " + serviceRequest.getServicing().getDescription()
+                + " foi reagendado para o dia " + this.getDate(serviceRequest.getDateHour())
+                + " às " + this.getHour(serviceRequest.getDateHour().minusHours(3))  + "."
+                + " Esperamos por você!";
+
+        emailUtil.sendEmail(serviceRequest.getClient().getEmail(), subject, body);
+
+        Message message = Message.creator(
+                        new com.twilio.type.PhoneNumber("whatsapp:+55" + serviceRequest.getClient().getPhoneNumber().substring(0, 2) + serviceRequest.getClient().getPhoneNumber().substring(3)),
+                        new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
+                        body)
+                .create();
+
+
         return serviceRepository.save(serviceRequest);
+    }
+
+    public String getDate(LocalDateTime dateTime) {
+
+        ZoneId zoneId = ZoneId.of("GMT-3");
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(dateTime, zoneId);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String dataFormatada = zonedDateTime.format(formatter);
+
+        return dataFormatada;
+    }
+
+    public String getHour(LocalDateTime dateTime) {
+
+        ZoneId zoneId = ZoneId.of("GMT-3");
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(dateTime, zoneId);
+
+        // Formata a ZonedDateTime de acordo com o padrão desejado
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        String horaFormatada = zonedDateTime.format(formatter);
+
+        return horaFormatada;
     }
 
     public void deleteService(Long id) {

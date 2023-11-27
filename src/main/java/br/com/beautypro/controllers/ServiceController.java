@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -158,7 +159,7 @@ public class ServiceController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createService(@Valid @RequestBody Service serviceRequest) {
+    public ResponseEntity<?> createService(@Valid @RequestBody Service serviceRequest) throws MessagingException {
 
         if (!clientRepository.existsByEmail(serviceRequest.getClient().getEmail())) {
             return ResponseEntity
@@ -184,7 +185,7 @@ public class ServiceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateService(@Valid @PathVariable("id") Long id, @RequestBody Service serviceRequest) {
+    public ResponseEntity<?> updateService(@Valid @PathVariable("id") Long id, @RequestBody Service serviceRequest) throws MessagingException {
 
         Optional<Service> serviceExists = serviceRepository.findById(id);
 
