@@ -1,16 +1,23 @@
 package br.com.beautypro.services;
 
 import br.com.beautypro.models.Client;
+import br.com.beautypro.models.EPaymentType;
+import br.com.beautypro.models.Servicing;
 import br.com.beautypro.models.User;
+import br.com.beautypro.payload.request.*;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.repository.ServiceRepository;
+import br.com.beautypro.services.repository.ServicingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,6 +26,9 @@ public class ServiceService {
 
     @Autowired
     private ServiceRepository serviceRepository;
+
+    @Autowired
+    private ServicingRepository servicingRepository;
 
     public PageableResponse getAllServices(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -57,10 +67,50 @@ public class ServiceService {
         return response;
     }
 
-    public PageableResponse getAllServicesFilterDesc(int page, int size, LocalDateTime startDate, LocalDateTime endDate) {
+    public PageableResponse getAllServicesFilterDesc(
+            int page, int size, LocalDateTime startDate, LocalDateTime endDate,
+            String paymentType, String clientName, String serviceName, String professionalName) {
 
-        Pageable pageable = PageRequest.of(page, size);
-        Page<br.com.beautypro.models.Service> productResponse = serviceRepository.findAllOrderByCreatedDateDesc(pageable);
+        // Pageable com ordenação por data de criação descendente
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+
+        // Especificação para aplicar os filtros
+        Specification<br.com.beautypro.models.Service> specification = Specification.where(null);
+
+        if (startDate != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("dateTime"), startDate));
+        }
+
+        if (endDate != null) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.lessThanOrEqualTo(root.get("dateTime"), endDate));
+        }
+
+        if (paymentType != null && !paymentType.isEmpty()) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("paymentType"), EPaymentType.valueOf(paymentType)));
+        }
+
+        if (clientName != null && !clientName.isEmpty()) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("client").get("name")),
+                            "%" + clientName.toLowerCase() + "%"));
+        }
+
+        if (serviceName != null && !serviceName.isEmpty()) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("servicing").get("description")),
+                            "%" + serviceName.toLowerCase() + "%"));
+        }
+
+        if (professionalName != null && !professionalName.isEmpty()) {
+            specification = specification.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("user").get("name")),
+                            "%" + professionalName.toLowerCase() + "%"));
+        }
+
+        Page<br.com.beautypro.models.Service> productResponse = serviceRepository.findAll(specification, pageable);
 
 
         List<br.com.beautypro.models.Service> serviceList = productResponse.stream()
@@ -75,6 +125,98 @@ public class ServiceService {
 
         return response;
     }
+
+    public List<StatusCount> getStatusCountsLast30Days() {
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(30);
+
+        List<br.com.beautypro.models.Service> servicesLast30Days = serviceRepository.findByDateTimeAfterAndDateTimeBefore(startDate, endDate);
+
+        return getStatusCounts(servicesLast30Days);
+    }
+
+    private List<StatusCount> getStatusCounts(List<br.com.beautypro.models.Service> services) {
+        long openedCount = services.stream().filter(br.com.beautypro.models.Service::isOpen).count();
+        long canceledCount = services.stream().filter(service -> !service.isOpen() && service.getAppointmentTime() == 0 && service.getFinishedDate() == null).count();
+        long finishedCount = services.stream().filter(service -> !service.isOpen() && service.getFinishedDate() == null).count();
+
+        return List.of(
+                new StatusCount("ABERTO", openedCount),
+                new StatusCount("CANCELADO", canceledCount),
+                new StatusCount("FINALIZADO", finishedCount)
+        );
+    }
+
+    public List<StatusCount> getStatusCountsInCurrentMonth() {
+        LocalDateTime startOfMonth = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfMonth = LocalDateTime.now().withDayOfMonth(LocalDateTime.now().toLocalDate().lengthOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+
+        List<br.com.beautypro.models.Service> servicesInMonth = serviceRepository.findByDateTimeBetween(startOfMonth, endOfMonth);
+
+        return getStatusCounts(servicesInMonth);
+    }
+
+    public List<ServicingCountDTO> getServicingCountsInCurrentMonth() {
+        LocalDateTime startOfMonth = LocalDateTime.now().withDayOfMonth(1).withHour(0).withMinute(0).withSecond(0).withNano(0);
+        LocalDateTime endOfMonth = LocalDateTime.now().withDayOfMonth(LocalDateTime.now().toLocalDate().lengthOfMonth()).withHour(23).withMinute(59).withSecond(59).withNano(999999999);
+
+        List<br.com.beautypro.models.Service> servicesInMonth = serviceRepository.findByDateTimeBetweenAndFinishedDateIsNotNull(startOfMonth, endOfMonth);
+
+        // Agrupa os serviços por procedimento e conta a quantidade de ocorrências
+        Map<Long, Long> servicingCounts = servicesInMonth.stream()
+                .collect(Collectors.groupingBy(service -> service.getServicing().getId(), Collectors.counting()));
+
+        // Recupera os procedimentos associados aos serviços do mês atual
+        List<Servicing> servicingsInMonth = servicingRepository.findAllById(servicingCounts.keySet());
+
+        // Converte os resultados para a classe DTO
+        return servicingsInMonth.stream()
+                .map(servicing -> new ServicingCountDTO(servicing.getId(), servicing.getDescription(), servicingCounts.getOrDefault(servicing.getId(), 0L)))
+                .collect(Collectors.toList());
+    }
+
+    private List<ServicingDTO> convertToDTO(List<Servicing> servicings) {
+        return servicings.stream()
+                .map(servicing -> {
+                    ServicingDTO dto = new ServicingDTO();
+                    dto.setId(servicing.getId());
+                    dto.setDescription(servicing.getDescription());
+                    dto.setPrice(servicing.getPrice());
+                    // Adicione outros campos conforme necessário
+                    Set<User> professionalList = servicing.getProfessionalList();
+                    // Faça o que precisar com a lista de profissionais associados
+
+                    return dto;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<MonthlyServiceSumDTO> getMonthlyServiceSums() {
+        List<Object[]> monthlySums = serviceRepository.getMonthlyServiceSums();
+
+        // Mapeia os resultados da consulta para a classe DTO
+        return monthlySums.stream()
+                .map(row -> {
+                    YearMonth yearMonth = YearMonth.of((int) row[0], (int) row[1]);
+                    double totalSum = (double) row[2];
+                    return new MonthlyServiceSumDTO(yearMonth.getMonthValue(), yearMonth.getYear(), totalSum);
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<DailyServiceCountDTO> getDailyServiceCountsInCurrentMonth() {
+        List<Object[]> dailyServiceCounts = serviceRepository.getDailyServiceCountsInCurrentMonth();
+
+        // Mapeia os resultados da consulta para a classe DTO
+        return dailyServiceCounts.stream()
+                .map(row -> {
+                    int day = (int) row[0];
+                    long count = (long) row[1];
+                    return new DailyServiceCountDTO(day, count);
+                })
+                .collect(Collectors.toList());
+    }
+
 
     public int[] getAppointmentsAvailable(LocalDateTime startDate, LocalDateTime endDate) {
 

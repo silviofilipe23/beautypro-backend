@@ -1,6 +1,7 @@
 package br.com.beautypro.controllers;
 
 import br.com.beautypro.models.*;
+import br.com.beautypro.payload.request.*;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
 import br.com.beautypro.services.ProductService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -71,16 +73,46 @@ public class ServiceController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<PageableResponse> getAllServicesList(
+    public ResponseEntity<PageableResponse> getAllServicesFilterDesc(
             @RequestParam int page,
             @RequestParam int size,
-            @RequestParam(value = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime startDate,
-            @RequestParam(value = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)  LocalDateTime endDate,
-            @RequestParam(value = "open", required = false) boolean open
-    ) {
+            @RequestParam(required = false) LocalDateTime startDate,
+            @RequestParam(required = false) LocalDateTime endDate,
+            @RequestParam(required = false) String paymentType,
+            @RequestParam(required = false) String clientName,
+            @RequestParam(required = false) String serviceName,
+            @RequestParam(required = false) String professionalName) {
 
         PageableResponse response;
-        response = serviceService.getAllServicesFilterDesc(page, size, startDate, endDate);
+        response = serviceService.getAllServicesFilterDesc(page, size, startDate, endDate, paymentType, clientName, serviceName, professionalName);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/pie-chart")
+    public ResponseEntity<List<StatusCount>> getStatusCountsInCurrentMonth() {
+
+        List<StatusCount> response = serviceService.getStatusCountsInCurrentMonth();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/servicings-chart")
+    public ResponseEntity<List<ServicingCountDTO>> getServicingCountsInCurrentMonth() {
+
+        List<ServicingCountDTO> response = serviceService.getServicingCountsInCurrentMonth();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/price-chart")
+    public ResponseEntity<List<MonthlyServiceSumDTO>> getMonthlyServiceSums() {
+
+        List<MonthlyServiceSumDTO> response = serviceService.getMonthlyServiceSums();
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/daily-chart")
+    public ResponseEntity<List<DailyServiceCountDTO>> getDailyServiceCountsInCurrentMonth() {
+
+        List<DailyServiceCountDTO> response = serviceService.getDailyServiceCountsInCurrentMonth();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
