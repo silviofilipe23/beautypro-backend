@@ -28,13 +28,19 @@ import java.util.stream.Collectors;
 public class ServiceService {
 
     @Autowired
-    private ServiceRepository serviceRepository;
+    private final ServiceRepository serviceRepository;
 
     @Autowired
-    private ServicingRepository servicingRepository;
+    private final ServicingRepository servicingRepository;
 
     @Autowired
-    private EmailUtil emailUtil;
+    private final EmailUtil emailUtil;
+
+    public ServiceService(ServiceRepository serviceRepository, ServicingRepository servicingRepository, EmailUtil emailUtil) {
+        this.serviceRepository = serviceRepository;
+        this.servicingRepository = servicingRepository;
+        this.emailUtil = emailUtil;
+    }
 
     public PageableResponse getAllServices(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -132,21 +138,13 @@ public class ServiceService {
         return response;
     }
 
-    public List<StatusCount> getStatusCountsLast30Days() {
-        LocalDateTime endDate = LocalDateTime.now();
-        LocalDateTime startDate = endDate.minusDays(30);
-
-        List<br.com.beautypro.models.Service> servicesLast30Days = serviceRepository.findByDateTimeAfterAndDateTimeBefore(startDate, endDate);
-
-        return getStatusCounts(servicesLast30Days);
-    }
-
     private List<StatusCount> getStatusCounts(List<br.com.beautypro.models.Service> services) {
         long openedCount = services.stream().filter(br.com.beautypro.models.Service::isOpen).count();
         long canceledCount = services.stream().filter(service -> !service.isOpen() && service.getAppointmentTime() == 0 && service.getFinishedDate() == null).count();
         long finishedCount = services.stream().filter(service -> !service.isOpen() && service.getFinishedDate() == null).count();
 
-        return List.of(
+
+        return Arrays.asList(
                 new StatusCount("ABERTO", openedCount),
                 new StatusCount("CANCELADO", canceledCount),
                 new StatusCount("FINALIZADO", finishedCount)
@@ -178,22 +176,6 @@ public class ServiceService {
         // Converte os resultados para a classe DTO
         return servicingsInMonth.stream()
                 .map(servicing -> new ServicingCountDTO(servicing.getId(), servicing.getDescription(), servicingCounts.getOrDefault(servicing.getId(), 0L)))
-                .collect(Collectors.toList());
-    }
-
-    private List<ServicingDTO> convertToDTO(List<Servicing> servicings) {
-        return servicings.stream()
-                .map(servicing -> {
-                    ServicingDTO dto = new ServicingDTO();
-                    dto.setId(servicing.getId());
-                    dto.setDescription(servicing.getDescription());
-                    dto.setPrice(servicing.getPrice());
-                    // Adicione outros campos conforme necessário
-                    Set<User> professionalList = servicing.getProfessionalList();
-                    // Faça o que precisar com a lista de profissionais associados
-
-                    return dto;
-                })
                 .collect(Collectors.toList());
     }
 
@@ -239,7 +221,7 @@ public class ServiceService {
         int[] array1 = {1, 2, 3, 4, 5};
 
         for (int item : array1) {
-            if (!contemItem(array2, item) && !set.contains(item)) {
+            if (contemItem(array2, item) && !set.contains(item)) {
                 if (item > 0) {
                     set.add(item);
                 }
@@ -247,7 +229,7 @@ public class ServiceService {
         }
 
         for (int item : array2) {
-            if (!contemItem(array1, item) && !set.contains(item)) {
+            if (contemItem(array1, item) && !set.contains(item)) {
                 if (item > 0) {
                     set.add(item);
                 }
@@ -265,10 +247,10 @@ public class ServiceService {
     public static boolean contemItem(int[] array, int item) {
         for (int i : array) {
             if (i == item) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
     public PageableResponse listServicesByClients(int page, int size, Client client) {

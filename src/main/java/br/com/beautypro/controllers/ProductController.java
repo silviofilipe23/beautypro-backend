@@ -5,7 +5,6 @@ import br.com.beautypro.models.Supplier;
 import br.com.beautypro.models.UnitOfMeasure;
 import br.com.beautypro.payload.response.MessageResponse;
 import br.com.beautypro.payload.response.PageableResponse;
-import br.com.beautypro.services.repository.ProdutctRepository;
 import br.com.beautypro.services.ProductService;
 import br.com.beautypro.services.SupplierService;
 import br.com.beautypro.services.UnitOfMeasureService;
@@ -26,27 +25,30 @@ import java.util.Optional;
 public class ProductController {
 
     @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     @Autowired
-    private ProdutctRepository produtctRepository;
+    private final UnitOfMeasureService unitOfMeasureService;
 
     @Autowired
-    private UnitOfMeasureService unitOfMeasureService;
+    private final SupplierService supplierService;
 
-    @Autowired
-    private SupplierService supplierService;
+    public ProductController(ProductService productService,  UnitOfMeasureService unitOfMeasureService, SupplierService supplierService) {
+        this.productService = productService;
+        this.unitOfMeasureService = unitOfMeasureService;
+        this.supplierService = supplierService;
+    }
 
     @GetMapping
     public ResponseEntity<PageableResponse> getAllProducts(@Valid @RequestParam int page, @RequestParam int size, @RequestParam(required=false) String name) {
 
+        PageableResponse clients;
         if (name == null) {
-            PageableResponse clients = productService.getAllProducts(page, size);
-            return new ResponseEntity<>(clients, HttpStatus.OK);
+            clients = productService.getAllProducts(page, size);
         } else {
-            PageableResponse clients = productService.listProductsFilter(page, size, name);
-            return new ResponseEntity<>(clients, HttpStatus.OK);
+            clients = productService.listProductsFilter(page, size, name);
         }
+        return new ResponseEntity<>(clients, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
