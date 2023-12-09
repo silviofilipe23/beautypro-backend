@@ -34,12 +34,6 @@ public interface ServiceRepository extends JpaRepository<Service, Long> {
             Pageable pageable
     );
 
-//    Page<Service> findByDateTimeBetweenOrderByDateTimeDesc(
-//            @Param("startDate") LocalDateTime startDate,
-//            @Param("endDate") LocalDateTime endDate,
-//            Pageable pageable
-//    );
-
     // Método personalizado para listar todos ordenados pela maior data de criação
     @Query("SELECT s FROM Service s ORDER BY s.createdDate DESC")
     Page<Service> findAllOrderByCreatedDateDesc(Pageable pageable);

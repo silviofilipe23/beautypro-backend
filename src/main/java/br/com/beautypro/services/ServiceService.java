@@ -141,7 +141,7 @@ public class ServiceService {
     private List<StatusCount> getStatusCounts(List<br.com.beautypro.models.Service> services) {
         long openedCount = services.stream().filter(br.com.beautypro.models.Service::isOpen).count();
         long canceledCount = services.stream().filter(service -> !service.isOpen() && service.getAppointmentTime() == 0 && service.getFinishedDate() == null).count();
-        long finishedCount = services.stream().filter(service -> !service.isOpen() && service.getFinishedDate() == null).count();
+        long finishedCount = services.stream().filter(service -> !service.isOpen() && service.getFinishedDate() != null).count();
 
 
         return Arrays.asList(
