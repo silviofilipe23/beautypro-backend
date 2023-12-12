@@ -293,11 +293,11 @@ public class ServiceService {
 
         emailUtil.sendEmail(serviceRequest.getClient().getEmail(), subject, body);
 
-        Message message = Message.creator(
-                        new com.twilio.type.PhoneNumber("whatsapp:+55" + serviceRequest.getClient().getPhoneNumber().substring(0, 2) + serviceRequest.getClient().getPhoneNumber().substring(3)),
-                        new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
-                        body)
-                .create();
+//        Message message = Message.creator(
+//                        new com.twilio.type.PhoneNumber("whatsapp:+55" + serviceRequest.getClient().getPhoneNumber().substring(0, 2) + serviceRequest.getClient().getPhoneNumber().substring(3)),
+//                        new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
+//                        body)
+//                .create();
 
         return serviceRepository.save(serviceRequest);
     }
