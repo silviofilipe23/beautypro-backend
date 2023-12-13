@@ -284,14 +284,14 @@ public class ServiceService {
 
     public br.com.beautypro.models.Service createService(br.com.beautypro.models.Service serviceRequest) throws MessagingException {
 
-//        String subject = "Agendamento Larissa Dionizio PMU";
-//        String body = "Olá "+ serviceRequest.getClient().getName()  + "."
-//                + " Seu procedimento " + serviceRequest.getServicing().getDescription()
-//                + " foi agendado para o dia " + this.getDate(serviceRequest.getDateHour())
-//                + " às " + this.getHour(serviceRequest.getDateHour().minusHours(3))  + "."
-//                + " Esperamos por você!";
-//
-//        emailUtil.sendEmail(serviceRequest.getClient().getEmail(), subject, body);
+        String subject = "Agendamento Larissa Dionizio PMU";
+        String body = "Olá "+ serviceRequest.getClient().getName()  + "."
+                + " Seu procedimento " + serviceRequest.getServicing().getDescription()
+                + " foi agendado para o dia " + this.getDate(serviceRequest.getDateHour())
+                + " às " + this.getHour(serviceRequest.getDateHour().minusHours(3))  + "."
+                + " Esperamos por você!";
+
+        emailUtil.sendEmail(serviceRequest.getClient().getEmail(), subject, body);
 
 //        Message message = Message.creator(
 //                        new com.twilio.type.PhoneNumber("whatsapp:+55" + serviceRequest.getClient().getPhoneNumber().substring(0, 2) + serviceRequest.getClient().getPhoneNumber().substring(3)),
@@ -312,20 +312,20 @@ public class ServiceService {
 
 
 
-        String subject = "Agendamento Larissa Dionizio PMU";
-        String body = "Olá "+ serviceRequest.getClient().getName()  + "."
-                + " Seu procedimento " + serviceRequest.getServicing().getDescription()
-                + " foi reagendado para o dia " + this.getDate(serviceRequest.getDateHour())
-                + " às " + this.getHour(serviceRequest.getDateHour().minusHours(3))  + "."
-                + " Esperamos por você!";
+//        String subject = "Agendamento Larissa Dionizio PMU";
+//        String body = "Olá "+ serviceRequest.getClient().getName()  + "."
+//                + " Seu procedimento " + serviceRequest.getServicing().getDescription()
+//                + " foi reagendado para o dia " + this.getDate(serviceRequest.getDateHour())
+//                + " às " + this.getHour(serviceRequest.getDateHour().minusHours(3))  + "."
+//                + " Esperamos por você!";
+//
+//        emailUtil.sendEmail(serviceRequest.getClient().getEmail(), subject, body);
 
-        emailUtil.sendEmail(serviceRequest.getClient().getEmail(), subject, body);
-
-        Message message = Message.creator(
-                        new com.twilio.type.PhoneNumber("whatsapp:+55" + serviceRequest.getClient().getPhoneNumber().substring(0, 2) + serviceRequest.getClient().getPhoneNumber().substring(3)),
-                        new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
-                        body)
-                .create();
+//        Message message = Message.creator(
+//                        new com.twilio.type.PhoneNumber("whatsapp:+55" + serviceRequest.getClient().getPhoneNumber().substring(0, 2) + serviceRequest.getClient().getPhoneNumber().substring(3)),
+//                        new com.twilio.type.PhoneNumber("whatsapp:+14155238886"),
+//                        body)
+//                .create();
 
 
         return serviceRepository.save(serviceRequest);
